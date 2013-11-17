@@ -41,15 +41,10 @@ public class Main
 		
 		String commandExit = "q";
 		String commandNext = "n";
+		String commandReload = "r";
 		String commandScopeGlobal = "globalScope";
-		String commandScopeIndividual = "globalScope";
-		
-		
-		
-//		String currentDir = System.getProperty("user.dir");
-		
-//		System.out.println("Current Directory: " + currentDir);
-		
+		String commandScopeIndividual = "individualScope";
+				
 		if (args.length < 1)
 		{
 			throw new Exception("Not Enough Arguments. Need Choco JS File Path");
@@ -75,19 +70,95 @@ public class Main
 		
 //		scope.toBuilder().
 		
-//		ClaferSolver solver = ClaferCompiler.compile(model, scope); 
+		ClaferSolver solver = null;
+		
+		try
+		{		
+			solver = ClaferCompiler.compile(model, scope); 
+		}
+		catch (Exception e)
+		{
+			solver = null;
+		}
 		
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		String s = "";
 		
-		while((s = br.readLine()) != commandExit)
+		while(!(s = br.readLine()).equals(commandExit))
 		{
-			System.out.println(s);
+			String commandParts[] = s.split(" ");
+			if (commandParts.length == 0)
+			{
+				System.out.println("Empty Command");
+				continue;
+			}
+			
+			String command = commandParts[0];
+			
+			if (command.equals(commandNext)) // next instance
+			{
+				if (solver == null)
+				{
+					try
+					{		
+						solver = ClaferCompiler.compile(model, scope); 
+					}
+					catch (Exception e)
+					{
+						solver = null;
+					}					
+				}
+			
+				if (solver == null)
+				{
+					System.out.println("Could not start the instantiation");
+				}
+				else
+				{
+					if (solver.find())
+					{
+				        System.out.println(solver.instance());
+					}
+					else
+					{
+						System.out.println("No more instances found. Please consider increasing scopes");						
+					}
+				}
+			}
+			else if (command.equals(commandReload)) // reloading
+			{
+				try
+				{		
+					solver = ClaferCompiler.compile(model, scope); 
+				}
+				catch (Exception e)
+				{
+					solver = null;
+				}
+				
+				if (solver == null)
+				{
+					System.out.println("Could not reload");					
+				}
+				else
+				{
+					System.out.println("Reloaded");					
+				}
+				
+			}
+			else if (command.equals(commandScopeGlobal))
+			{
+				System.out.println("Global scope: " + s);				
+			}
+			else if (command.equals(commandScopeIndividual))
+			{
+				System.out.println("Individual scope: " + s);				
+			}
+			else
+			{
+				System.out.println("Unhandled command: " + s);				
+			}
 		}
-		
-//        solver.find();
-        
-//        System.out.println(solver.instance());
 	}
 
 }
