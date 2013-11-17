@@ -39,6 +39,13 @@ public class Main
 
 	public static void main(String[] args) throws Exception {
 		
+		String commandExit = "q";
+		String commandNext = "n";
+		String commandScopeGlobal = "globalScope";
+		String commandScopeIndividual = "globalScope";
+		
+		
+		
 //		String currentDir = System.getProperty("user.dir");
 		
 //		System.out.println("Current Directory: " + currentDir);
@@ -56,21 +63,31 @@ public class Main
 		{
 			throw new Exception("File Does Not Exist");
 		}
-				
+
 		//----------------------------------------
 		// Running the model itself(instantiating) 
 		//----------------------------------------
 		
 		Triple<AstModel, Scope, Objective[]> modelTripple = Javascript.readModel(inputFile);
 
-		AstModel model = modelTripple.getFst();
+		AstModel model = modelTripple.getFst();        
+		Scope scope = modelTripple.getSnd();
+		
+//		scope.toBuilder().
+		
+//		ClaferSolver solver = ClaferCompiler.compile(model, scope); 
+		
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		String s = "";
+		
+		while((s = br.readLine()) != commandExit)
+		{
+			System.out.println(s);
+		}
+		
+//        solver.find();
         
-		ClaferSolver solver = ClaferCompiler.compile(model, modelTripple.getSnd()); 
-
-		// The optimal instance
-        solver.find();
-        
-        System.out.println(solver.instance());
+//        System.out.println(solver.instance());
 	}
 
 }
