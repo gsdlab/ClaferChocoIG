@@ -44,6 +44,8 @@ public class Main
 		String commandReload = "r";
 		String commandScopeGlobal = "globalScope";
 		String commandScopeIndividual = "individualScope";
+		String commandMinUnsat = "minUnsat";
+		String commandUnsatCore = "unsatCore";
 				
 		if (args.length < 1)
 		{
@@ -79,6 +81,7 @@ public class Main
 		catch (Exception e)
 		{
 			solver = null;
+			System.out.println(e.getMessage());
 		}
 		
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -106,6 +109,7 @@ public class Main
 					catch (Exception e)
 					{
 						solver = null;
+						System.out.println(e.getMessage());
 					}					
 				}
 			
@@ -125,6 +129,20 @@ public class Main
 					}
 				}
 			}
+			else if (command.equals(commandMinUnsat)) // reloading
+			{
+				System.out.println("Min UNSAT command:");					
+				ClaferUnsat unsat = ClaferCompiler.compileUnsat(model, scope);
+				// Print the Min-Unsat and near-miss example.
+				System.out.println(unsat.minUnsat());		
+			}
+			else if (command.equals(commandUnsatCore)) // reloading
+			{
+				System.out.println("UNSAT Core command:");					
+				ClaferUnsat unsat = ClaferCompiler.compileUnsat(model, scope);
+				// Print the Min-Unsat and near-miss example.
+				System.out.println(unsat.unsatCore());
+			}			
 			else if (command.equals(commandReload)) // reloading
 			{
 				try
@@ -134,6 +152,7 @@ public class Main
 				catch (Exception e)
 				{
 					solver = null;
+					System.out.println(e.getMessage());
 				}
 				
 				if (solver == null)
@@ -147,12 +166,23 @@ public class Main
 				
 			}
 			else if (command.equals(commandScopeGlobal))
-			{
+			{				
 				System.out.println("Global scope: " + s);				
+				scope = scope.toBuilder().adjustDefaultScope(Integer.parseInt(commandParts[1])).toScope();
+				try
+				{		
+					solver = ClaferCompiler.compile(model, scope); 
+				}
+				catch (Exception e)
+				{
+					solver = null;
+					System.out.println(e.getMessage());
+				}					
 			}
 			else if (command.equals(commandScopeIndividual))
 			{
-				System.out.println("Individual scope: " + s);				
+				System.out.println("Individual scope: " + s);
+//				scope.toBuilder().adjustScope(clafer, adjust)
 			}
 			else
 			{
