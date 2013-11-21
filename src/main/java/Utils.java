@@ -43,31 +43,6 @@ public class Utils {
 	    }
 	    return sb.toString();
 	}
-
-	public static InstanceClafer getInstanceValueByName(InstanceClafer[] topClafers, String name) {
-		// TODO Auto-generated method stub
-
-		for (int i = 0; i < topClafers.length; i++)
-		{
-			if (topClafers[i].getType().getName().equals(name))
-			{
-				return topClafers[i];
-			}			
-		}
-
-		for (int i = 0; i < topClafers.length; i++)
-		{
-			if (topClafers[i].hasChildren())
-			{
-				InstanceClafer result = getInstanceValueByName(topClafers[i].getChildren(), name);
-				if (result != null)
-					return result;
-			}
-		}
-		
-		return null;
-	}	
-
 	
 	public static AstConcreteClafer getConcreteClaferChildByName(AstClafer root, String name) {
 		// TODO Auto-generated method stub
@@ -97,7 +72,7 @@ public class Utils {
     
 	public static AstClafer getModelChildByName(AstModel model, String name) {
 		// TODO Auto-generated method stub
-
+		
 		List<AstAbstractClafer> abstractChildren = model.getAbstracts();
 		
 		for (AstAbstractClafer clafer : abstractChildren)
@@ -109,6 +84,26 @@ public class Utils {
 		}
 
 		for (AstAbstractClafer clafer : abstractChildren)
+		{
+			AstClafer foundchild = getConcreteClaferChildByName(clafer, name);
+			if (foundchild != null)
+			{
+				return foundchild;
+			}
+		}		
+
+		
+		List<AstConcreteClafer> concreteChildren = model.getChildren();
+		
+		for (AstConcreteClafer clafer : concreteChildren)
+		{
+			if (clafer.getName().equals(name))
+			{
+				return clafer;
+			}
+		}
+
+		for (AstConcreteClafer clafer : concreteChildren)
 		{
 			AstClafer foundchild = getConcreteClaferChildByName(clafer, name);
 			if (foundchild != null)

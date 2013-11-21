@@ -89,6 +89,7 @@ public class Main
 		
 		while(!(s = br.readLine()).equals(commandExit))
 		{
+			s = s.trim();
 			String commandParts[] = s.split(" ");
 			if (commandParts.length == 0)
 			{
@@ -168,7 +169,26 @@ public class Main
 			else if (command.equals(commandScopeGlobal))
 			{				
 				System.out.println("Global scope: " + s);				
-				scope = scope.toBuilder().adjustDefaultScope(Integer.parseInt(commandParts[1])).toScope();
+
+				if (commandParts.length != 2)
+				{
+					System.out.println("The format of the command is: '" + commandScopeGlobal + " <integer>'");
+					System.out.println("Given: '" + s + "'");
+					continue;
+				}
+
+				int scopeValue;
+				
+				try{
+					scopeValue = Integer.parseInt(commandParts[1]);
+				}
+				catch(Exception e)
+				{
+					System.out.println("The scope has to be an integer number. Given '" + commandParts[1] + "'");
+					continue;					
+				}
+
+				scope = scope.toBuilder().adjustDefaultScope(scopeValue).toScope();
 				try
 				{		
 					solver = ClaferCompiler.compile(model, scope); 
@@ -177,18 +197,63 @@ public class Main
 				{
 					solver = null;
 					System.out.println(e.getMessage());
+					continue;
 				}					
+				
+				System.out.println("Model is ready after the scope change");
 			}
 			else if (command.equals(commandScopeIndividual))
 			{
 				System.out.println("Individual scope: " + s);
-//				scope.toBuilder().adjustScope(clafer, adjust)
+
+				if (commandParts.length != 3)
+				{
+					System.out.println("The format of the command is: '" + commandScopeGlobal + " <clafer> <integer>'");
+					System.out.println("Given: '" + s + "'");
+					continue;
+				}								
+								
+				String claferName = commandParts[1];
+				int claferScopeValue;
+				
+				try{
+					claferScopeValue = Integer.parseInt(commandParts[2]);
+				}
+				catch(Exception e)
+				{
+					System.out.println("The scope has to be an integer number. Given '" + commandParts[2] + "'");
+					continue;					
+				}
+				
+				AstClafer clafer = Utils.getModelChildByName(model, claferName);
+				if (clafer == null)
+				{
+					System.out.println("The clafer is not found: '" + claferName + "'");
+					continue;
+				}
+					
+				scope = scope.toBuilder().adjustScope(clafer, claferScopeValue).toScope();
+				
+				try
+				{		
+					solver = ClaferCompiler.compile(model, scope); 
+				}
+				catch (Exception e)
+				{
+					solver = null;
+					System.out.println(e.getMessage());
+					continue;
+				}					
+				
+				System.out.println("Model is ready after the scope change");
 			}
 			else
 			{
 				System.out.println("Unhandled command: " + s);				
 			}
 		}
-	}
-
+		
+		System.out.println("Exit command");		
+	}	
+	
 }
