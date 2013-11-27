@@ -5,7 +5,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -46,20 +48,23 @@ public class Main
 		String commandScopeIndividual = "individualScope";
 		String commandMinUnsat = "minUnsat";
 		String commandUnsatCore = "unsatCore";
-				
+		String commandListScopes = "list";
+		
 		if (args.length < 1)
 		{
 			throw new Exception("Not Enough Arguments. Need Choco JS File Path");
 		}
 		
 		String fileName = args[0];
-				
+		
 		File inputFile = new File(fileName);
 		
 		if (!inputFile.exists())
 		{
 			throw new Exception("File Does Not Exist");
 		}
+
+		String scopesFile = fileName.substring(0, fileName.length() - 3) + ".scopes.json";		
 
 		//----------------------------------------
 		// Running the model itself(instantiating) 
@@ -82,6 +87,11 @@ public class Main
 		{
 			solver = null;
 			System.out.println(e.getMessage());
+		}
+		
+		if (solver != null)
+		{
+			System.out.println("Model is ready");
 		}
 		
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -188,7 +198,7 @@ public class Main
 					continue;					
 				}
 
-				scope = scope.toBuilder().adjustDefaultScope(scopeValue).toScope();
+				scope = scope.toBuilder().defaultScope(scopeValue).toScope();
 				try
 				{		
 					solver = ClaferCompiler.compile(model, scope); 
@@ -201,6 +211,31 @@ public class Main
 				}					
 				
 				System.out.println("Model is ready after the scope change");
+			}
+			else if (command.equals(commandListScopes)) // getting list of scopes
+			{
+				List<ClaferNameScopePair> claferScopePairs = new ArrayList<ClaferNameScopePair>();
+				
+				List<AstClafer> allClafers = Utils.getAllModelClafers(model);
+				
+				for (AstClafer curClafer: allClafers)
+				{
+					int curScope;
+					
+					try{
+						curScope = scope.getScope(curClafer);
+					}
+					catch(Exception e)
+					{
+						curScope = 0;
+					}
+					
+					claferScopePairs.add(new ClaferNameScopePair(curClafer.getName(), curScope));
+				}		
+				
+				Collections.sort(claferScopePairs);
+				
+				Utils.produceScopeFile(claferScopePairs, scopesFile);
 			}
 			else if (command.equals(commandScopeIndividual))
 			{
@@ -232,7 +267,7 @@ public class Main
 					continue;
 				}
 					
-				scope = scope.toBuilder().adjustScope(clafer, claferScopeValue).toScope();
+				scope = scope.toBuilder().setScope(clafer, claferScopeValue).toScope();
 				
 				try
 				{		
