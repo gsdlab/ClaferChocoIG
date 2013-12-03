@@ -45,6 +45,7 @@ public class Main
 		String commandNext = "n";
 		String commandReload = "r";
 		String commandScopeGlobal = "globalScope";
+		String commandScopeInt = "intScope";
 		String commandScopeIndividual = "individualScope";
 		String commandMinUnsat = "minUnsat";
 		String commandUnsatCore = "unsatCore";
@@ -71,7 +72,7 @@ public class Main
 		//----------------------------------------
 		
 		Triple<AstModel, Scope, Objective[]> modelTripple = Javascript.readModel(inputFile);
-
+		
 		AstModel model = modelTripple.getFst();        
 		Scope scope = modelTripple.getSnd();
 		
@@ -199,6 +200,44 @@ public class Main
 				}
 
 				scope = scope.toBuilder().defaultScope(scopeValue).toScope();
+				try
+				{		
+					solver = ClaferCompiler.compile(model, scope); 
+				}
+				catch (Exception e)
+				{
+					solver = null;
+					System.out.println(e.getMessage());
+					continue;
+				}					
+				
+				System.out.println("Model is ready after the scope change");
+			}
+			else if (command.equals(commandScopeInt))
+			{				
+				System.out.println("Integer scope: " + s);				
+
+				if (commandParts.length != 3)
+				{
+					System.out.println("The format of the command is: '" + commandScopeInt + " <integer> <integer>'");
+					System.out.println("Given: '" + s + "'");
+					continue;
+				}
+
+				int scopeLow;
+				int scopeHigh;
+				
+				try{
+					scopeLow = Integer.parseInt(commandParts[1]);
+					scopeHigh = Integer.parseInt(commandParts[2]);
+				}
+				catch(Exception e)
+				{
+					System.out.println("Expected integer numbers. Given '" + commandParts[1] + "' '" + commandParts[2] + "'");
+					continue;					
+				}
+
+				scope = scope.toBuilder().intLow(scopeLow).intHigh(scopeHigh).toScope();
 				try
 				{		
 					solver = ClaferCompiler.compile(model, scope); 
