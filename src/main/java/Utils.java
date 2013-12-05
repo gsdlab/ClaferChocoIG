@@ -187,7 +187,29 @@ public class Utils {
 		writer.close();
 		
 	}
-    
+
+    public static void printClafer(InstanceClafer clafer, Appendable out) throws IOException {
+    	printClafer(clafer, "", out);
+    }
+
+    private static void printClafer(InstanceClafer clafer, String indent, Appendable out) throws IOException {
+        out.append(indent).append(clafer.getType().toString());
+        
+        if (clafer.getType().getSuperClafer() != null)
+        {
+        	out.append(" : ").append(clafer.getType().getSuperClafer().getName());
+        }
+        
+        if(clafer.hasRef()) {
+            out.append("  =  ").append(clafer.getRef().toString());
+        }
+
+        out.append(" \n");
+        for (InstanceClafer child : clafer.getChildren()) {
+        	printClafer(child, indent + "\t", out);
+        }
+    }	
+		
 }
 
 

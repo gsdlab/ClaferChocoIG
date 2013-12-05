@@ -50,6 +50,7 @@ public class Main
 		String commandMinUnsat = "minUnsat";
 		String commandUnsatCore = "unsatCore";
 		String commandListScopes = "list";
+		String commandSooMode = "soo";
 		
 		if (args.length < 1)
 		{
@@ -76,9 +77,10 @@ public class Main
 		AstModel model = modelTripple.getFst();        
 		Scope scope = modelTripple.getSnd();
 		
-//		scope.toBuilder().
+		Mode currentMode = Mode.IG; // start with IG mode
 		
 		ClaferSolver solver = null;
+		ClaferOptimizer optimizer = null;
 		
 		try
 		{		
@@ -110,9 +112,55 @@ public class Main
 			
 			String command = commandParts[0];
 			
-			if (command.equals(commandNext)) // next instance
+			if (currentMode == Mode.IG) // normal mode
 			{
-				if (solver == null)
+				
+				if (command.equals(commandNext)) // next instance
+				{
+					if (solver == null)
+					{
+						try
+						{		
+							solver = ClaferCompiler.compile(model, scope); 
+						}
+						catch (Exception e)
+						{
+							solver = null;
+							System.out.println(e.getMessage());
+						}					
+					}
+				
+					if (solver == null)
+					{
+						System.out.println("Could not start the instantiation");
+					}
+					else
+					{
+						if (solver.find())
+						{
+					        System.out.println(solver.instance());
+						}
+						else
+						{
+							System.out.println("No more instances found. Please consider increasing scopes");						
+						}
+					}
+				}
+				else if (command.equals(commandMinUnsat)) // reloading
+				{
+					System.out.println("Min UNSAT command:");					
+					ClaferUnsat unsat = ClaferCompiler.compileUnsat(model, scope);
+					// Print the Min-Unsat and near-miss example.
+					System.out.println(unsat.minUnsat());		
+				}
+				else if (command.equals(commandUnsatCore)) // reloading
+				{
+					System.out.println("UNSAT Core command:");					
+					ClaferUnsat unsat = ClaferCompiler.compileUnsat(model, scope);
+					// Print the Min-Unsat and near-miss example.
+					System.out.println(unsat.unsatCore());
+				}			
+				else if (command.equals(commandReload)) // reloading
 				{
 					try
 					{		
@@ -122,208 +170,234 @@ public class Main
 					{
 						solver = null;
 						System.out.println(e.getMessage());
-					}					
-				}
-			
-				if (solver == null)
-				{
-					System.out.println("Could not start the instantiation");
-				}
-				else
-				{
-					if (solver.find())
+					}
+					
+					if (solver == null)
 					{
-				        System.out.println(solver.instance());
+						System.out.println("Could not reload");					
 					}
 					else
 					{
-						System.out.println("No more instances found. Please consider increasing scopes");						
+						System.out.println("Reloaded");					
 					}
+					
 				}
-			}
-			else if (command.equals(commandMinUnsat)) // reloading
-			{
-				System.out.println("Min UNSAT command:");					
-				ClaferUnsat unsat = ClaferCompiler.compileUnsat(model, scope);
-				// Print the Min-Unsat and near-miss example.
-				System.out.println(unsat.minUnsat());		
-			}
-			else if (command.equals(commandUnsatCore)) // reloading
-			{
-				System.out.println("UNSAT Core command:");					
-				ClaferUnsat unsat = ClaferCompiler.compileUnsat(model, scope);
-				// Print the Min-Unsat and near-miss example.
-				System.out.println(unsat.unsatCore());
-			}			
-			else if (command.equals(commandReload)) // reloading
-			{
-				try
-				{		
-					solver = ClaferCompiler.compile(model, scope); 
-				}
-				catch (Exception e)
-				{
-					solver = null;
-					System.out.println(e.getMessage());
-				}
-				
-				if (solver == null)
-				{
-					System.out.println("Could not reload");					
-				}
-				else
-				{
-					System.out.println("Reloaded");					
-				}
-				
-			}
-			else if (command.equals(commandScopeGlobal))
-			{				
-				System.out.println("Global scope: " + s);				
-
-				if (commandParts.length != 2)
-				{
-					System.out.println("The format of the command is: '" + commandScopeGlobal + " <integer>'");
-					System.out.println("Given: '" + s + "'");
-					continue;
-				}
-
-				int scopeValue;
-				
-				try{
-					scopeValue = Integer.parseInt(commandParts[1]);
-				}
-				catch(Exception e)
-				{
-					System.out.println("The scope has to be an integer number. Given '" + commandParts[1] + "'");
-					continue;					
-				}
-
-				scope = scope.toBuilder().defaultScope(scopeValue).toScope();
-				try
-				{		
-					solver = ClaferCompiler.compile(model, scope); 
-				}
-				catch (Exception e)
-				{
-					solver = null;
-					System.out.println(e.getMessage());
-					continue;
-				}					
-				
-				System.out.println("Model is ready after the scope change");
-			}
-			else if (command.equals(commandScopeInt))
-			{				
-				System.out.println("Integer scope: " + s);				
-
-				if (commandParts.length != 3)
-				{
-					System.out.println("The format of the command is: '" + commandScopeInt + " <integer> <integer>'");
-					System.out.println("Given: '" + s + "'");
-					continue;
-				}
-
-				int scopeLow;
-				int scopeHigh;
-				
-				try{
-					scopeLow = Integer.parseInt(commandParts[1]);
-					scopeHigh = Integer.parseInt(commandParts[2]);
-				}
-				catch(Exception e)
-				{
-					System.out.println("Expected integer numbers. Given '" + commandParts[1] + "' '" + commandParts[2] + "'");
-					continue;					
-				}
-
-				scope = scope.toBuilder().intLow(scopeLow).intHigh(scopeHigh).toScope();
-				try
-				{		
-					solver = ClaferCompiler.compile(model, scope); 
-				}
-				catch (Exception e)
-				{
-					solver = null;
-					System.out.println(e.getMessage());
-					continue;
-				}					
-				
-				System.out.println("Model is ready after the scope change");
-			}
-			else if (command.equals(commandListScopes)) // getting list of scopes
-			{
-				List<ClaferNameScopePair> claferScopePairs = new ArrayList<ClaferNameScopePair>();
-				
-				List<AstClafer> allClafers = Utils.getAllModelClafers(model);
-				
-				for (AstClafer curClafer: allClafers)
-				{
-					int curScope;
+				else if (command.equals(commandScopeGlobal))
+				{				
+					System.out.println("Global scope: " + s);				
+	
+					if (commandParts.length != 2)
+					{
+						System.out.println("The format of the command is: '" + commandScopeGlobal + " <integer>'");
+						System.out.println("Given: '" + s + "'");
+						continue;
+					}
+	
+					int scopeValue;
 					
 					try{
-						curScope = scope.getScope(curClafer);
+						scopeValue = Integer.parseInt(commandParts[1]);
 					}
 					catch(Exception e)
 					{
-						curScope = 0;
+						System.out.println("The scope has to be an integer number. Given '" + commandParts[1] + "'");
+						continue;					
+					}
+	
+					scope = scope.toBuilder().defaultScope(scopeValue).toScope();
+					try
+					{		
+						solver = ClaferCompiler.compile(model, scope); 
+					}
+					catch (Exception e)
+					{
+						solver = null;
+						System.out.println(e.getMessage());
+						continue;
+					}					
+					
+					System.out.println("Model is ready after the scope change");
+				}
+				else if (command.equals(commandScopeInt))
+				{				
+					System.out.println("Integer scope: " + s);				
+	
+					if (commandParts.length != 3)
+					{
+						System.out.println("The format of the command is: '" + commandScopeInt + " <integer> <integer>'");
+						System.out.println("Given: '" + s + "'");
+						continue;
+					}
+	
+					int scopeLow;
+					int scopeHigh;
+					
+					try{
+						scopeLow = Integer.parseInt(commandParts[1]);
+						scopeHigh = Integer.parseInt(commandParts[2]);
+					}
+					catch(Exception e)
+					{
+						System.out.println("Expected integer numbers. Given '" + commandParts[1] + "' '" + commandParts[2] + "'");
+						continue;					
+					}
+	
+					scope = scope.toBuilder().intLow(scopeLow).intHigh(scopeHigh).toScope();
+					try
+					{		
+						solver = ClaferCompiler.compile(model, scope); 
+					}
+					catch (Exception e)
+					{
+						solver = null;
+						System.out.println(e.getMessage());
+						continue;
+					}					
+					
+					System.out.println("Model is ready after the scope change");
+				}
+				else if (command.equals(commandListScopes)) // getting list of scopes
+				{
+					List<ClaferNameScopePair> claferScopePairs = new ArrayList<ClaferNameScopePair>();
+					
+					List<AstClafer> allClafers = Utils.getAllModelClafers(model);
+					
+					for (AstClafer curClafer: allClafers)
+					{
+						int curScope;
+						
+						try{
+							curScope = scope.getScope(curClafer);
+						}
+						catch(Exception e)
+						{
+							curScope = 0;
+						}
+						
+						claferScopePairs.add(new ClaferNameScopePair(curClafer.getName(), curScope));
+					}		
+					
+					Collections.sort(claferScopePairs);
+					
+					Utils.produceScopeFile(claferScopePairs, scopesFile);
+				}
+				else if (command.equals(commandScopeIndividual))
+				{
+					System.out.println("Individual scope: " + s);
+	
+					if (commandParts.length != 3)
+					{
+						System.out.println("The format of the command is: '" + commandScopeGlobal + " <clafer> <integer>'");
+						System.out.println("Given: '" + s + "'");
+						continue;
+					}								
+									
+					String claferName = commandParts[1];
+					int claferScopeValue;
+					
+					try{
+						claferScopeValue = Integer.parseInt(commandParts[2]);
+					}
+					catch(Exception e)
+					{
+						System.out.println("The scope has to be an integer number. Given '" + commandParts[2] + "'");
+						continue;					
 					}
 					
-					claferScopePairs.add(new ClaferNameScopePair(curClafer.getName(), curScope));
-				}		
-				
-				Collections.sort(claferScopePairs);
-				
-				Utils.produceScopeFile(claferScopePairs, scopesFile);
-			}
-			else if (command.equals(commandScopeIndividual))
-			{
-				System.out.println("Individual scope: " + s);
-
-				if (commandParts.length != 3)
-				{
-					System.out.println("The format of the command is: '" + commandScopeGlobal + " <clafer> <integer>'");
-					System.out.println("Given: '" + s + "'");
-					continue;
-				}								
-								
-				String claferName = commandParts[1];
-				int claferScopeValue;
-				
-				try{
-					claferScopeValue = Integer.parseInt(commandParts[2]);
-				}
-				catch(Exception e)
-				{
-					System.out.println("The scope has to be an integer number. Given '" + commandParts[2] + "'");
-					continue;					
-				}
-				
-				AstClafer clafer = Utils.getModelChildByName(model, claferName);
-				if (clafer == null)
-				{
-					System.out.println("The clafer is not found: '" + claferName + "'");
-					continue;
-				}
+					AstClafer clafer = Utils.getModelChildByName(model, claferName);
+					if (clafer == null)
+					{
+						System.out.println("The clafer is not found: '" + claferName + "'");
+						continue;
+					}
+						
+					scope = scope.toBuilder().setScope(clafer, claferScopeValue).toScope();
 					
-				scope = scope.toBuilder().setScope(clafer, claferScopeValue).toScope();
-				
-				try
-				{		
-					solver = ClaferCompiler.compile(model, scope); 
+					try
+					{		
+						solver = ClaferCompiler.compile(model, scope); 
+					}
+					catch (Exception e)
+					{
+						solver = null;
+						System.out.println(e.getMessage());
+						continue;
+					}					
+					
+					System.out.println("Model is ready after the scope change");
 				}
-				catch (Exception e)
+				else if (command.equals(commandSooMode))
 				{
-					solver = null;
-					System.out.println(e.getMessage());
-					continue;
-				}					
-				
-				System.out.println("Model is ready after the scope change");
+					
+			        Objective[] goals = modelTripple.getThd();
+			        if (goals.length == 0) {
+						System.out.println("Cannot switch to the single-objective optimization mode, because there are no goals defined.");
+			        } else if (goals.length > 1) {
+						System.out.println("Cannot switch to the single-objective optimization mode, because there is more than one goal defined.");
+			        }
+			        else
+			        {
+			        	
+						try
+						{		
+				            optimizer = ClaferCompiler.compile(model, 
+				            		scope, 
+				            		goals[0]);        				        	
+						}
+						catch (Exception e)
+						{
+							solver = null;
+							System.out.println(e.getMessage());
+							continue;
+						}		
+						
+						System.out.println("Switched to the single-objective optimization mode. Use the same command to switch back. Use 'Next' command to get the next optimal instance.");
+						System.out.println("-----------------------------------------------------");
+						currentMode = Mode.Soo;
+			        	
+			        }
+					
+				}
+				else
+				{
+					System.out.println("Unhandled command: " + s);				
+				}
 			}
-			else
+			else // mode == SOO 
 			{
-				System.out.println("Unhandled command: " + s);				
+				if (command.equals(commandSooMode))
+				{
+					optimizer = null;
+					System.out.println("Switched back to the normal mode.");
+					currentMode = Mode.IG;				
+				}
+				else if (command.equals(commandNext)) // next instance
+				{
+					if (optimizer.find())
+					{
+						
+			        	Pair<Integer, InstanceModel> solution = optimizer.instance();
+
+			        	int optimalValue = solution.getFst();
+		                InstanceModel instance = solution.getSnd();
+			            for (InstanceClafer c : instance.getTopClafers())
+			            {
+			            	Utils.printClafer(c, System.out);
+			            }		            
+			            System.out.println("Quality value: " + optimalValue);
+						System.out.println("-----------------------------------------------------");
+					}
+					else
+					{
+						System.out.println("No more optimal instances found.");						
+					}
+				}
+				else
+				{
+					System.out.println("Invalid command in the SOO mode: " + s);				
+					System.out.println("If you believe the command is correct, please switch to the normal mode and try again.");
+				}
+				
 			}
 		}
 		
