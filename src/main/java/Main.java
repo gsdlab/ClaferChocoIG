@@ -56,7 +56,13 @@ public class Main
 		{
 			throw new Exception("Not Enough Arguments. Need Choco JS File Path");
 		}
-		
+
+		if (args[0].equals("--version"))
+		{
+			System.out.println("Clafer Choco Instance Generator v0.0.1.07-Jan-2014");
+			return;
+		}
+				
 		String fileName = args[0];
 		
 		File inputFile = new File(fileName);
