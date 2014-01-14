@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Properties;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -54,12 +55,23 @@ public class Main
 		
 		if (args.length < 1)
 		{
-			throw new Exception("Not Enough Arguments. Need Choco JS File Path");
+			throw new Exception("Not Enough Arguments. Must be at least one");
 		}
 
 		if (args[0].equals("--version"))
 		{
-			System.out.println("Clafer Choco Instance Generator v0.0.1.07-Jan-2014");
+			Properties configFile = new Properties();
+			try {
+				configFile.load(Main.class.getClassLoader().getResourceAsStream("version.properties"));
+				String name = configFile.getProperty("name");
+				String releaseDate = configFile.getProperty("releasedate");
+				String version = configFile.getProperty("version");
+				System.out.println(name + " v" + version + "." + releaseDate);
+			} catch (IOException e) {
+	 
+				e.printStackTrace();
+			}
+						
 			return;
 		}
 				
