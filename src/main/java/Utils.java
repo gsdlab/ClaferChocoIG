@@ -168,13 +168,16 @@ public class Utils {
 // could be done with JSON serializer, but this way I do not refer to any libraries
 		
 		PrintWriter writer = new PrintWriter(scopesFile);
-		writer.println("{ \"list\": [");
+		writer.println("[");
 
 		for (int i = 0; i < claferScopePairs.size(); i++)
 		{
 			ClaferNameScopePair pair = claferScopePairs.get(i);
 
-			writer.print("{\"name\": \"" + pair.name + "\", \"value\": \"" + pair.scope + "\"}");			
+			if (pair.name.equals("#clafer#"))
+				pair.name = "";
+			
+			writer.print("{\"lpqName\": \"" + pair.name + "\", \"scope\": " + pair.scope + "}");			
 
 			if (i != claferScopePairs.size() - 1)
 			{
@@ -183,7 +186,7 @@ public class Utils {
 			
 		}
 		
-		writer.println("\n]}");
+		writer.println("]");
 		writer.close();
 		
 	}

@@ -47,11 +47,11 @@ public class Main
 		String commandReload = "r";
 		String commandScopeGlobal = "globalScope";
 		String commandScopeInt = "intScope";
-		String commandScopeIndividual = "individualScope";
+		String commandScopeIndividual = "scope";
 		String commandMinUnsat = "minUnsat";
 		String commandUnsatCore = "unsatCore";
-		String commandListScopes = "list";
-		String commandSooMode = "soo";
+		String commandListScopes = "saveScopes";
+		String commandSooMode = "sooMode";
 		
 		if (args.length < 1)
 		{
@@ -84,7 +84,7 @@ public class Main
 			throw new Exception("File Does Not Exist");
 		}
 
-		String scopesFile = fileName.substring(0, fileName.length() - 3) + ".scopes.json";		
+		String scopesFile = fileName.substring(0, fileName.length() - 3) + ".cfr-scope";		
 
 		//----------------------------------------
 		// Running the model itself(instantiating) 
