@@ -1,7 +1,7 @@
 ClaferChocoIG
 ===========
 
-v0.3.5.15-01-2014
+v0.3.5.17-01-2014
 
 A backend for [ClaferIDE](https://github.com/gsdlab/ClaferIDE) that uses [ChocoSolver](https://github.com/gsdlab/chocosolver) to generate instances.
 This project is a wrapper that invokes ChocoSolver in a proper way and produces the output in the same format as ClaferIG does.
@@ -57,7 +57,7 @@ java -jar claferchocoig-0.3.5-jar-with-dependencies.jar --version
 ### Running as a Backend
 
 * Install [ClaferIDE](https://github.com/gsdlab/ClaferIDE).
-* Copy the binary `claferchocoig-0.3.5-jar-with-dependencies.jar` to the `Backends` folder. If you built the project from the source code, the binary can be found in the `target` subfolder.
+* Copy the binary `claferchocoig-0.3.5-jar-with-dependencies.jar` to the `Server/Backends/ChocoIG` folder. If you built the project from the source code, the binary can be found in the `target` subfolder.
 * Put (if exists, just make sure all paths match) the following configuration in the `Server/Backends/backends.json` :
 
 ```json
