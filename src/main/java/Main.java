@@ -48,7 +48,7 @@ public class Main
 		String commandNext = "n";
 		String commandReload = "r";
 		String commandScopeGlobal = "globalScope";
-		String commandScopeInt = "intScope";
+		String commandScopeInt = "maxInt";
 		String commandScopeIndividual = "scope";
 		String commandMinUnsat = "minUnsat";
 		String commandUnsatCore = "unsatCore";
@@ -242,21 +242,19 @@ public class Main
 				}
 				else if (command.equals(commandScopeInt))
 				{				
-					System.out.println("Integer scope: " + s);				
+					System.out.println("Max Integer: " + s);				
 	
-					if (commandParts.length != 3)
+					if (commandParts.length != 2)
 					{
-						System.out.println("The format of the command is: '" + commandScopeInt + " <integer> <integer>'");
+						System.out.println("The format of the command is: '" + commandScopeInt + " <integer>'");
 						System.out.println("Given: '" + s + "'");
 						continue;
 					}
 	
-					int scopeLow;
 					int scopeHigh;
 					
 					try{
-						scopeLow = Integer.parseInt(commandParts[1]);
-						scopeHigh = Integer.parseInt(commandParts[2]);
+						scopeHigh = Integer.parseInt(commandParts[1]);
 					}
 					catch(Exception e)
 					{
@@ -264,6 +262,7 @@ public class Main
 						continue;					
 					}
 	
+					int scopeLow = -(scopeHigh + 1);
 					scope = scope.toBuilder().intLow(scopeLow).intHigh(scopeHigh).toScope();
 					solver = compileModel(model, scope);
 					
