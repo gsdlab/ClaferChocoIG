@@ -40,6 +40,8 @@ import org.w3c.dom.NodeList;
 public class Main
 {
 
+	private static int instanceID = 0; // id of an instance previously been generated 
+	
 	public static void main(String[] args) throws Exception {
 		
 		String commandExit = "q";
@@ -178,7 +180,7 @@ public class Main
 					}
 					else
 					{
-						System.out.println("Reloaded");					
+						System.out.println("Reset");					
 					}
 					
 				}
@@ -454,6 +456,8 @@ public class Main
 
 		if (solver.find())
 		{
+			instanceID++;
+			System.out.println("=== Instance " + instanceID + " ===");
 	        System.out.println(solver.instance());
 		}
 		else
@@ -465,6 +469,7 @@ public class Main
 	private static ClaferSolver compileModel(AstModel model, Scope scope) 
 	{
 		ClaferSolver solver;
+		instanceID = 0; // reset instance ID
 		try
 		{		
 			solver = ClaferCompiler.compile(model, scope); 
