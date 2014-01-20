@@ -53,6 +53,9 @@ public class Main
 		String commandListScopes = "saveScopes";
 		String commandSooMode = "sooMode";
 		
+		String commandScopeIncGlobal = "incGlobalScope";
+		String commandScopeIncIndividual = "incScope";
+		
 		if (args.length < 1)
 		{
 			throw new Exception("Not Enough Arguments. Must be at least one");
@@ -89,8 +92,25 @@ public class Main
 		//----------------------------------------
 		// Running the model itself(instantiating) 
 		//----------------------------------------
+
+		Triple<AstModel, Scope, Objective[]> modelTripple = null;		
 		
-		Triple<AstModel, Scope, Objective[]> modelTripple = Javascript.readModel(inputFile);
+		try{
+			modelTripple = Javascript.readModel(inputFile);
+		}
+		catch(Exception e)
+		{
+			if (e.getMessage().indexOf("ReferenceError: \"string\" is not defined.") >= 0)
+			{
+				System.out.println("Error: strings are not supported in this ClaferChocoIG implementation. Exiting...");
+			}
+			else	
+			{
+				System.out.println(e.getMessage());
+			}
+			
+			return;
+		}
 		
 		AstModel model = modelTripple.getFst();        
 		Scope scope = modelTripple.getSnd();
@@ -100,19 +120,11 @@ public class Main
 		ClaferSolver solver = null;
 		ClaferOptimizer optimizer = null;
 		
-		try
-		{		
-			solver = ClaferCompiler.compile(model, scope); 
-		}
-		catch (Exception e)
-		{
-			solver = null;
-			System.out.println(e.getMessage());
-		}
+		solver = compileModel(model, scope);
 		
 		if (solver != null)
 		{
-			System.out.println("Model is ready");
+			nextInstance(solver);
 		}
 		
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -137,32 +149,10 @@ public class Main
 				{
 					if (solver == null)
 					{
-						try
-						{		
-							solver = ClaferCompiler.compile(model, scope); 
-						}
-						catch (Exception e)
-						{
-							solver = null;
-							System.out.println(e.getMessage());
-						}					
+						solver = compileModel(model, scope);				
 					}
-				
-					if (solver == null)
-					{
-						System.out.println("Could not start the instantiation");
-					}
-					else
-					{
-						if (solver.find())
-						{
-					        System.out.println(solver.instance());
-						}
-						else
-						{
-							System.out.println("No more instances found. Please consider increasing scopes");						
-						}
-					}
+					
+					nextInstance(solver);
 				}
 				else if (command.equals(commandMinUnsat)) // reloading
 				{
@@ -180,15 +170,7 @@ public class Main
 				}			
 				else if (command.equals(commandReload)) // reloading
 				{
-					try
-					{		
-						solver = ClaferCompiler.compile(model, scope); 
-					}
-					catch (Exception e)
-					{
-						solver = null;
-						System.out.println(e.getMessage());
-					}
+					solver = compileModel(model, scope);
 					
 					if (solver == null)
 					{
@@ -223,18 +205,38 @@ public class Main
 					}
 	
 					scope = scope.toBuilder().defaultScope(scopeValue).toScope();
-					try
-					{		
-						solver = ClaferCompiler.compile(model, scope); 
-					}
-					catch (Exception e)
-					{
-						solver = null;
-						System.out.println(e.getMessage());
-						continue;
-					}					
+					solver = compileModel(model, scope);
 					
-					System.out.println("Model is ready after the scope change");
+					if (solver != null)						
+						System.out.println("Model is ready after the scope change");
+				}
+				else if (command.equals(commandScopeIncGlobal))
+				{				
+					System.out.println("Increase global scope: " + s);				
+	
+					if (commandParts.length != 2)
+					{
+						System.out.println("The format of the command is: '" + commandScopeIncGlobal + " <integer>'");
+						System.out.println("Given: '" + s + "'");
+						continue;
+					}
+	
+					int scopeValue;
+					
+					try{
+						scopeValue = Integer.parseInt(commandParts[1]);
+					}
+					catch(Exception e)
+					{
+						System.out.println("The scope has to be an integer number. Given '" + commandParts[1] + "'");
+						continue;					
+					}
+	
+					scope = scope.toBuilder().adjustDefaultScope(scopeValue).toScope();
+					solver = compileModel(model, scope);
+					
+					if (solver != null)						
+						System.out.println("Model is ready after the scope change");
 				}
 				else if (command.equals(commandScopeInt))
 				{				
@@ -261,18 +263,11 @@ public class Main
 					}
 	
 					scope = scope.toBuilder().intLow(scopeLow).intHigh(scopeHigh).toScope();
-					try
-					{		
-						solver = ClaferCompiler.compile(model, scope); 
-					}
-					catch (Exception e)
-					{
-						solver = null;
-						System.out.println(e.getMessage());
-						continue;
-					}					
+					solver = compileModel(model, scope);
 					
-					System.out.println("Model is ready after the scope change");
+					if (solver != null)						
+						System.out.println("Model is ready after the scope change");
+
 				}
 				else if (command.equals(commandListScopes)) // getting list of scopes
 				{
@@ -305,7 +300,7 @@ public class Main
 	
 					if (commandParts.length != 3)
 					{
-						System.out.println("The format of the command is: '" + commandScopeGlobal + " <clafer> <integer>'");
+						System.out.println("The format of the command is: '" + commandScopeIndividual + " <clafer> <integer>'");
 						System.out.println("Given: '" + s + "'");
 						continue;
 					}								
@@ -329,20 +324,48 @@ public class Main
 						continue;
 					}
 						
-					scope = scope.toBuilder().setScope(clafer, claferScopeValue).toScope();
+					scope = scope.toBuilder().setScope(clafer, claferScopeValue).toScope();					
+					solver = compileModel(model, scope);
 					
-					try
-					{		
-						solver = ClaferCompiler.compile(model, scope); 
-					}
-					catch (Exception e)
+					if (solver != null)						
+						System.out.println("Model is ready after the scope change");
+
+				}
+				else if (command.equals(commandScopeIncIndividual))
+				{
+					System.out.println("Increase individual scope: " + s);
+	
+					if (commandParts.length != 3)
 					{
-						solver = null;
-						System.out.println(e.getMessage());
+						System.out.println("The format of the command is: '" + commandScopeIncIndividual + " <clafer> <integer>'");
+						System.out.println("Given: '" + s + "'");
 						continue;
-					}					
+					}								
+									
+					String claferName = commandParts[1];
+					int claferScopeValue;
 					
-					System.out.println("Model is ready after the scope change");
+					try{
+						claferScopeValue = Integer.parseInt(commandParts[2]);
+					}
+					catch(Exception e)
+					{
+						System.out.println("The scope has to be an integer number. Given '" + commandParts[2] + "'");
+						continue;					
+					}
+					
+					AstClafer clafer = Utils.getModelChildByName(model, claferName);
+					if (clafer == null)
+					{
+						System.out.println("The clafer is not found: '" + claferName + "'");
+						continue;
+					}
+						
+					scope = scope.toBuilder().adjustScope(clafer, claferScopeValue).toScope();
+					solver = compileModel(model, scope);
+					
+					if (solver != null)						
+						System.out.println("Model is ready after the scope change");
 				}
 				else if (command.equals(commandSooMode))
 				{
@@ -355,7 +378,6 @@ public class Main
 			        }
 			        else
 			        {
-			        	
 						try
 						{		
 				            optimizer = ClaferCompiler.compile(model, 
@@ -420,6 +442,40 @@ public class Main
 		}
 		
 		System.out.println("Exit command");		
+	}
+
+	private static void nextInstance(ClaferSolver solver) 
+	{
+		if (solver == null)
+		{
+			System.out.println("Could not start the instantiation");
+			return;
+		}
+
+		if (solver.find())
+		{
+	        System.out.println(solver.instance());
+		}
+		else
+		{
+			System.out.println("No more instances found. Please consider increasing scopes");						
+		}
+	}
+
+	private static ClaferSolver compileModel(AstModel model, Scope scope) 
+	{
+		ClaferSolver solver;
+		try
+		{		
+			solver = ClaferCompiler.compile(model, scope); 
+		}
+		catch (Exception e)
+		{
+			solver = null;			
+			System.out.println(e.getMessage());
+		}		
+		
+		return solver;
 	}	
 	
 }
