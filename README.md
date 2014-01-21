@@ -1,7 +1,7 @@
 ClaferChocoIG
 ===========
 
-v0.3.5.17-01-2014
+v0.3.5.20-01-2014
 
 A backend for [ClaferIDE](https://github.com/gsdlab/ClaferIDE) that uses [ChocoSolver](https://github.com/gsdlab/chocosolver) to generate instances.
 This project is a wrapper that invokes ChocoSolver in a proper way and produces the output in the same format as ClaferIG does.
