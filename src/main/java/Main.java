@@ -104,13 +104,22 @@ public class Main
 		{
 			if (e.getMessage().indexOf("ReferenceError: \"string\" is not defined.") >= 0)
 			{
-				System.out.println("Error: strings are not supported in this ClaferChocoIG implementation. Exiting...");
+				System.out.println("Error: strings are not supported in this ClaferChocoIG implementation.\nPlease press \"Quit\" or \"Stop\" to exit this instance generator and try another one.");
 			}
 			else	
 			{
+				System.out.println("Unhandled compilation error occured. Please report this problem.");
 				System.out.println(e.getMessage());
 			}
 			
+			String s = "";
+			
+			BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+			while(!(s = br.readLine()).equals(commandExit))
+			{
+				
+			}
+
 			return;
 		}
 		
