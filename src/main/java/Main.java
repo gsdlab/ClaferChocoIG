@@ -81,7 +81,6 @@ public class Main
 		}
 				
 		String fileName = args[0];
-		
 		File inputFile = new File(fileName);
 		
 		if (!inputFile.exists())
@@ -125,6 +124,11 @@ public class Main
 		
 		AstModel model = modelTripple.getFst();        
 		Scope scope = modelTripple.getSnd();
+
+		/* setting the default int range */
+		int scopeHighDef = 127;
+		int scopeLowDef = -(scopeHighDef + 1);
+		scope = scope.toBuilder().intLow(scopeLowDef).intHigh(scopeHighDef).toScope();
 		
 		Mode currentMode = Mode.IG; // start with IG mode
 		
