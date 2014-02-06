@@ -104,7 +104,7 @@ public class Main
 		{
 			if (e.getMessage().indexOf("ReferenceError: \"string\" is not defined.") >= 0)
 			{
-				System.out.println("Error: strings are not supported in this ClaferChocoIG implementation.\nPlease press \"Quit\" or \"Stop\" to exit this instance generator and try another one.");
+				System.out.println("The model contains string clafers, which are currently not supported in Choco-based IG.\nPlease press \"Quit\" or \"Stop\" to exit this instance generator and try another one.");
 			}
 			else	
 			{
