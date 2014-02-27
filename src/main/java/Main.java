@@ -41,6 +41,7 @@ public class Main
 {
 
 	private static int instanceID = 0; // id of an instance previously been generated 
+	private static int optimalInstanceID = 0; // id of an optimal instance instance previously been generated 
 	
 	public static void main(String[] args) throws Exception {
 		
@@ -405,9 +406,12 @@ public class Main
 							continue;
 						}		
 						
-						System.out.println("Switched to the single-objective optimization mode. Use the same command to switch back. Use 'Next' command to get the next optimal instance.");
-						System.out.println("-----------------------------------------------------");
+						System.out.println("Switched to the single-objective optimization mode.");
+						System.out.println("Use the same command to switch back to normal mode.");
+						System.out.println("Use 'Next' command to get the next optimal instance.");
+						System.out.println();
 						currentMode = Mode.Soo;
+						optimalInstanceID = 0;
 			        	
 			        }
 					
@@ -429,17 +433,13 @@ public class Main
 				{
 					if (optimizer.find())
 					{
-						
-			        	Pair<Integer, InstanceModel> solution = optimizer.instance();
-
-			        	int optimalValue = solution.getFst();
-		                InstanceModel instance = solution.getSnd();
+			        	InstanceModel instance = optimizer.instance();
+			        	optimalInstanceID++;
+						System.out.println("=== Optimal Instance " + optimalInstanceID + " ===\n");
 			            for (InstanceClafer c : instance.getTopClafers())
 			            {
 			            	Utils.printClafer(c, System.out);
 			            }		            
-			            System.out.println("Quality value: " + optimalValue);
-						System.out.println("-----------------------------------------------------");
 					}
 					else
 					{
@@ -449,7 +449,7 @@ public class Main
 				else
 				{
 					System.out.println("Invalid command in the SOO mode: " + s);				
-					System.out.println("If you believe the command is correct, please switch to the normal mode and try again.");
+					System.out.println("If you believe the command is valid, please switch to the normal mode and try again.");
 				}
 				
 			}
@@ -469,7 +469,7 @@ public class Main
 		if (solver.find())
 		{
 			instanceID++;
-			System.out.println("=== Instance " + instanceID + " ===");
+			System.out.println("=== Instance " + instanceID + " ===\n");
 	        System.out.println(solver.instance());
 		}
 		else
