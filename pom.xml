@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>claferchoco</groupId>
   <artifactId>claferchocoig</artifactId>
-  <version>0.3.6-SNAPSHOT</version>
+  <version>0.3.6</version>
   <name>ChocoInstanceGenerator</name>
   <dependencies>
 	  <dependency>
@@ -10,6 +10,11 @@
 	    <artifactId>chocosolver</artifactId>
 	    <version>0.3.6-SNAPSHOT</version>
 	  </dependency>
+	  <dependency>
+	    <groupId>net.sf.jopt-simple</groupId>
+	    <artifactId>jopt-simple</artifactId>
+	    <version>4.6</version>
+	  </dependency>		  
     </dependencies>
     <build>
         <plugins>
