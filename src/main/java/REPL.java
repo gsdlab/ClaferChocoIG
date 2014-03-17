@@ -1,6 +1,7 @@
 import java.io.BufferedReader;
 import java.io.Console;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -402,10 +403,11 @@ public class REPL {
 			        	InstanceModel instance = optimizer.instance();
 			        	optimalInstanceID++;
 						System.out.println("=== Optimal Instance " + optimalInstanceID + " ===\n");
+
 			            for (InstanceClafer c : instance.getTopClafers())
 			            {
 			            	Utils.printClafer(c, System.out);
-			            }		            
+			            }
 					}
 					else
 					{
@@ -424,7 +426,7 @@ public class REPL {
 		System.out.println("Exit command");		
 	}
 
-	private static void nextInstance(ClaferSolver solver) 
+	private static void nextInstance(ClaferSolver solver) throws IOException 
 	{
 		if (solver == null)
 		{
@@ -436,7 +438,13 @@ public class REPL {
 		{
 			instanceID++;
 			System.out.println("=== Instance " + instanceID + " ===\n");
-	        System.out.println(solver.instance());
+			
+            InstanceModel instance = solver.instance();
+            for (InstanceClafer c : instance.getTopClafers())
+            {
+            	Utils.printClafer(c, System.out);
+            }
+            System.out.println("--- instance " + (instanceID) + " ends ---\n");    			
 		}
 		else
 		{
