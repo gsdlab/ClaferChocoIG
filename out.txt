@@ -1,0 +1,180 @@
+=== Instance 1 ===
+
+c0_Alice$0 : c0_Person 
+	c0_age$0 : clafer  =  18 
+	c0_maritalStatus$0 : clafer 
+		c0_married$0 : clafer 
+			c0_spouse$0 : clafer  =  c0_Bob$0 
+c0_Bob$0 : c0_Person 
+	c0_age$1 : clafer  =  18 
+	c0_maritalStatus$1 : clafer 
+		c0_married$1 : clafer 
+			c0_spouse$1 : clafer  =  c0_Alice$0 
+c0_Carol$0 : c0_Person 
+	c0_age$2 : clafer  =  5 
+	c0_maritalStatus$2 : clafer 
+		c0_neverMarried$0 : clafer 
+--- instance 1 ends ---
+
+=== Instance 2 ===
+
+c0_Alice$0 : c0_Person 
+	c0_age$0 : clafer  =  18 
+	c0_maritalStatus$0 : clafer 
+		c0_married$0 : clafer 
+			c0_spouse$0 : clafer  =  c0_Bob$0 
+c0_Bob$0 : c0_Person 
+	c0_age$1 : clafer  =  19 
+	c0_maritalStatus$1 : clafer 
+		c0_married$1 : clafer 
+			c0_spouse$1 : clafer  =  c0_Alice$0 
+c0_Carol$0 : c0_Person 
+	c0_age$2 : clafer  =  5 
+	c0_maritalStatus$2 : clafer 
+		c0_neverMarried$0 : clafer 
+--- instance 2 ends ---
+
+=== Instance 3 ===
+
+c0_Alice$0 : c0_Person 
+	c0_age$0 : clafer  =  18 
+	c0_maritalStatus$0 : clafer 
+		c0_married$0 : clafer 
+			c0_spouse$0 : clafer  =  c0_Bob$0 
+c0_Bob$0 : c0_Person 
+	c0_age$1 : clafer  =  20 
+	c0_maritalStatus$1 : clafer 
+		c0_married$1 : clafer 
+			c0_spouse$1 : clafer  =  c0_Alice$0 
+c0_Carol$0 : c0_Person 
+	c0_age$2 : clafer  =  5 
+	c0_maritalStatus$2 : clafer 
+		c0_neverMarried$0 : clafer 
+--- instance 3 ends ---
+
+=== Instance 4 ===
+
+c0_Alice$0 : c0_Person 
+	c0_age$0 : clafer  =  18 
+	c0_maritalStatus$0 : clafer 
+		c0_married$0 : clafer 
+			c0_spouse$0 : clafer  =  c0_Bob$0 
+c0_Bob$0 : c0_Person 
+	c0_age$1 : clafer  =  21 
+	c0_maritalStatus$1 : clafer 
+		c0_married$1 : clafer 
+			c0_spouse$1 : clafer  =  c0_Alice$0 
+c0_Carol$0 : c0_Person 
+	c0_age$2 : clafer  =  5 
+	c0_maritalStatus$2 : clafer 
+		c0_neverMarried$0 : clafer 
+--- instance 4 ends ---
+
+=== Instance 5 ===
+
+c0_Alice$0 : c0_Person 
+	c0_age$0 : clafer  =  18 
+	c0_maritalStatus$0 : clafer 
+		c0_married$0 : clafer 
+			c0_spouse$0 : clafer  =  c0_Bob$0 
+c0_Bob$0 : c0_Person 
+	c0_age$1 : clafer  =  22 
+	c0_maritalStatus$1 : clafer 
+		c0_married$1 : clafer 
+			c0_spouse$1 : clafer  =  c0_Alice$0 
+c0_Carol$0 : c0_Person 
+	c0_age$2 : clafer  =  5 
+	c0_maritalStatus$2 : clafer 
+		c0_neverMarried$0 : clafer 
+--- instance 5 ends ---
+
+=== Instance 6 ===
+
+c0_Alice$0 : c0_Person 
+	c0_age$0 : clafer  =  18 
+	c0_maritalStatus$0 : clafer 
+		c0_married$0 : clafer 
+			c0_spouse$0 : clafer  =  c0_Bob$0 
+c0_Bob$0 : c0_Person 
+	c0_age$1 : clafer  =  23 
+	c0_maritalStatus$1 : clafer 
+		c0_married$1 : clafer 
+			c0_spouse$1 : clafer  =  c0_Alice$0 
+c0_Carol$0 : c0_Person 
+	c0_age$2 : clafer  =  5 
+	c0_maritalStatus$2 : clafer 
+		c0_neverMarried$0 : clafer 
+--- instance 6 ends ---
+
+=== Instance 7 ===
+
+c0_Alice$0 : c0_Person 
+	c0_age$0 : clafer  =  18 
+	c0_maritalStatus$0 : clafer 
+		c0_married$0 : clafer 
+			c0_spouse$0 : clafer  =  c0_Bob$0 
+c0_Bob$0 : c0_Person 
+	c0_age$1 : clafer  =  24 
+	c0_maritalStatus$1 : clafer 
+		c0_married$1 : clafer 
+			c0_spouse$1 : clafer  =  c0_Alice$0 
+c0_Carol$0 : c0_Person 
+	c0_age$2 : clafer  =  5 
+	c0_maritalStatus$2 : clafer 
+		c0_neverMarried$0 : clafer 
+--- instance 7 ends ---
+
+=== Instance 8 ===
+
+c0_Alice$0 : c0_Person 
+	c0_age$0 : clafer  =  18 
+	c0_maritalStatus$0 : clafer 
+		c0_married$0 : clafer 
+			c0_spouse$0 : clafer  =  c0_Bob$0 
+c0_Bob$0 : c0_Person 
+	c0_age$1 : clafer  =  25 
+	c0_maritalStatus$1 : clafer 
+		c0_married$1 : clafer 
+			c0_spouse$1 : clafer  =  c0_Alice$0 
+c0_Carol$0 : c0_Person 
+	c0_age$2 : clafer  =  5 
+	c0_maritalStatus$2 : clafer 
+		c0_neverMarried$0 : clafer 
+--- instance 8 ends ---
+
+=== Instance 9 ===
+
+c0_Alice$0 : c0_Person 
+	c0_age$0 : clafer  =  18 
+	c0_maritalStatus$0 : clafer 
+		c0_married$0 : clafer 
+			c0_spouse$0 : clafer  =  c0_Bob$0 
+c0_Bob$0 : c0_Person 
+	c0_age$1 : clafer  =  26 
+	c0_maritalStatus$1 : clafer 
+		c0_married$1 : clafer 
+			c0_spouse$1 : clafer  =  c0_Alice$0 
+c0_Carol$0 : c0_Person 
+	c0_age$2 : clafer  =  5 
+	c0_maritalStatus$2 : clafer 
+		c0_neverMarried$0 : clafer 
+--- instance 9 ends ---
+
+=== Instance 10 ===
+
+c0_Alice$0 : c0_Person 
+	c0_age$0 : clafer  =  18 
+	c0_maritalStatus$0 : clafer 
+		c0_married$0 : clafer 
+			c0_spouse$0 : clafer  =  c0_Bob$0 
+c0_Bob$0 : c0_Person 
+	c0_age$1 : clafer  =  27 
+	c0_maritalStatus$1 : clafer 
+		c0_married$1 : clafer 
+			c0_spouse$1 : clafer  =  c0_Alice$0 
+c0_Carol$0 : c0_Person 
+	c0_age$2 : clafer  =  5 
+	c0_maritalStatus$2 : clafer 
+		c0_neverMarried$0 : clafer 
+--- instance 10 ends ---
+

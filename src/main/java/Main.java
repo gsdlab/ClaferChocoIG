@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -47,7 +48,7 @@ public class Main
 		
         OptionParser parser = new OptionParser() {
             {
-                accepts( "file", "input file name in Javascript format" ).withRequiredArg().ofType( File.class )
+                accepts( "file", "input file in Javascript format" ).withRequiredArg().ofType( File.class )
                     .describedAs( "Javascript file" );
                 
                 accepts( "testaadl", "test the AADL to Clafer model" );
@@ -55,7 +56,11 @@ public class Main
                 accepts( "soo", "run single-objective optimization mode" );
                 accepts( "version", "display the tool version" );
                 accepts( "maxint", "specify maximum integer value" ).withRequiredArg().ofType( Integer.class );
+                accepts( "n", "specify maximum number of instances" ).withRequiredArg().ofType( Integer.class );
                 accepts( "scope", "override global scope value" ).withRequiredArg().ofType( Integer.class );
+
+                accepts( "output", "output instances to file" ).withRequiredArg().ofType( File.class )
+                .describedAs( "Text file" );
 
                 accepts( "help", "show help").forHelp();                
             }
@@ -92,7 +97,20 @@ public class Main
 		{
 			throw new Exception("File does not exist: " + inputFile.getPath());
 		}
+
+		PrintStream outStream = System.out;
 		
+		if (options.has("output"))
+		{
+			File outputFile = (File) options.valueOf("output");
+			outStream = new PrintStream(outputFile);
+		}
+		
+		if (!inputFile.exists())
+		{
+			throw new Exception("File does not exist: " + inputFile.getPath());
+		}
+				
 		if (options.has( "soo" ) )
 		{
 			SOO.runSOO(inputFile, options);
@@ -103,7 +121,7 @@ public class Main
 		}
 		else
 		{
-			parser.printHelpOn(System.out);
+			Normal.runNormal(inputFile, options, outStream);
 		}
 		
 		
