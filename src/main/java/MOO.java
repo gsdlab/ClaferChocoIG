@@ -17,9 +17,9 @@ import org.clafer.objective.Objective;
 import org.clafer.scope.Scope;
 
 
-public class SOO {
+public class MOO {
 
-	public static void runSOO(File inputFile, OptionSet options) throws Exception
+	public static void runOptimization(File inputFile, OptionSet options) throws Exception
 	{
 		//----------------------------------------
 		// Running the model itself(instantiating) 
@@ -33,12 +33,10 @@ public class SOO {
         Objective[] goals = modelTriple.getThd();
         if (goals.length == 0) {
             throw new Exception("No goals.");
-        } else if (goals.length > 1) {
-            throw new Exception("Multiple goals not currently supported.");
         }
-        Objective goal = goals[0];
+//        Objective goal = goals[0];
         
-        System.out.println(goal.isMaximize() ? "Maximize" : "Minimize");       	
+//        System.out.println(goal.isMaximize() ? "Maximize" : "Minimize");       	
         
         Scope scope = modelTriple.getSnd(); 
         
@@ -102,21 +100,23 @@ public class SOO {
         
         ClaferOptimizer solver = ClaferCompiler.compile(model, 
         		scope, 
-        	    goal);         
+        	    goals);         
         
-        System.out.println("Generating instances...");        
+        System.out.println("Generating optimal instances...");        
         
     	int index = 0; // optimal instance id
         while (solver.find()) 
     	{
-            System.out.println("=== Instance " + (++index) + " ===\n");                    
+            System.out.println("=== Instance " + (++index) + " Begin ===\n");                    
             InstanceModel instance = solver.instance();
             for (InstanceClafer c : instance.getTopClafers())
             {
             	Utils.printClafer(c, System.out);
             }
-            System.out.println("--- instance " + (index) + " ends ---\n");                    
+            System.out.println("--- Instance " + (index) + " End ---\n");                    
     	}
+
+        System.out.println("All optimal instances within the scope generated\n");                    
 		
 	}
 	

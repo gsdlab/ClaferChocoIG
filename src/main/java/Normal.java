@@ -63,13 +63,13 @@ public class Normal {
         	if (n >= 0 && index == n)
         		break;
         	
-        	outStream.println("=== Instance " + (++index) + " ===\n");                    
+        	outStream.println("=== Instance " + (++index) + " Begin ===\n");                    
             InstanceModel instance = solver.instance();
             for (InstanceClafer c : instance.getTopClafers())
             {
             	Utils.printClafer(c, outStream);
             }
-            outStream.println("--- instance " + (index) + " ends ---\n");                    
+            outStream.println("--- Instance " + (index) + " End ---\n");                    
     	}
 
         System.out.println("Generated " + index +" instance(s)");        

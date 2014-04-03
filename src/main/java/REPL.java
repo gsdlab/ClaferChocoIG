@@ -437,14 +437,14 @@ public class REPL {
 		if (solver.find())
 		{
 			instanceID++;
-			System.out.println("=== Instance " + instanceID + " ===\n");
+			System.out.println("=== Instance " + instanceID + " Begin ===\n");
 			
             InstanceModel instance = solver.instance();
             for (InstanceClafer c : instance.getTopClafers())
             {
             	Utils.printClafer(c, System.out);
             }
-            System.out.println("--- instance " + (instanceID) + " ends ---\n");    			
+            System.out.println("--- Instance " + (instanceID) + " End ---\n");    			
 		}
 		else
 		{

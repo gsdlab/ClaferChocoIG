@@ -53,7 +53,7 @@ public class Main
                 
                 accepts( "testaadl", "test the AADL to Clafer model" );
                 accepts( "repl", "run the tool in REPL (interactive) mode" );
-                accepts( "soo", "run single-objective optimization mode" );
+                accepts( "moo", "run the tool in multi-objective optimization mode" );
                 accepts( "version", "display the tool version" );
                 accepts( "maxint", "specify maximum integer value" ).withRequiredArg().ofType( Integer.class );
                 accepts( "n", "specify maximum number of instances" ).withRequiredArg().ofType( Integer.class );
@@ -111,9 +111,9 @@ public class Main
 			throw new Exception("File does not exist: " + inputFile.getPath());
 		}
 				
-		if (options.has( "soo" ) )
+		if (options.has( "moo" ) )
 		{
-			SOO.runSOO(inputFile, options);
+			MOO.runOptimization(inputFile, options);
 		}	
 		else if (options.has( "repl" ) )
 		{
