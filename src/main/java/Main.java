@@ -53,6 +53,7 @@ public class Main
                 
                 accepts( "testaadl", "test the AADL to Clafer model" );
                 accepts( "repl", "run the tool in REPL (interactive) mode" );
+                accepts( "prettify", "use simple and pretty output format (not formal)" );
                 accepts( "moo", "run the tool in multi-objective optimization mode" );
                 accepts( "version", "display the tool version" );
                 accepts( "maxint", "specify maximum integer value" ).withRequiredArg().ofType( Integer.class );

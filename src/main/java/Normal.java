@@ -11,6 +11,7 @@ import org.clafer.ast.AstModel;
 import org.clafer.collection.Triple;
 import org.clafer.compiler.ClaferCompiler;
 import org.clafer.compiler.ClaferOptimizer;
+import org.clafer.compiler.ClaferSearch;
 import org.clafer.compiler.ClaferSolver;
 import org.clafer.instance.InstanceClafer;
 import org.clafer.instance.InstanceModel;
@@ -31,7 +32,8 @@ public class Normal {
 		Triple<AstModel, Scope, Objective[]> modelTriple = Javascript.readModel(inputFile);
 
 		AstModel model = modelTriple.getFst();        
-        Scope scope = modelTriple.getSnd(); 
+        Scope scope = modelTriple.getSnd();
+        Objective[] objectives = modelTriple.getThd();
         
     	if (options.has("scope"))
     	{
@@ -45,7 +47,7 @@ public class Normal {
 			scope = scope.toBuilder().intLow(scopeLow).intHigh(scopeHigh).toScope();
     	}
 
-    	ClaferSolver solver = ClaferCompiler.compile(model, scope);         
+    	ClaferSearch solver = ClaferCompiler.compile(model, scope, objectives);         
         
         System.out.println("Generating instances...");        
 
