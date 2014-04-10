@@ -47,8 +47,16 @@ public class Normal {
 			scope = scope.toBuilder().intLow(scopeLow).intHigh(scopeHigh).toScope();
     	}
 
-    	ClaferSearch solver = ClaferCompiler.compile(model, scope, objectives);         
-        
+    	ClaferSearch solver;
+    	if (objectives.length == 0)
+    	{    		
+    		solver = ClaferCompiler.compile(model, scope);         
+    	}
+    	else
+    	{
+    		solver = ClaferCompiler.compile(model, scope, objectives);         
+    	}
+    	
         System.out.println("Generating instances...");        
 
         int n = 0;

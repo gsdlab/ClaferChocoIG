@@ -100,8 +100,15 @@ public class REPL {
 		
 		ClaferSearch solver = null;
 		
-		solver = compileModel(model, scope, objectives);
-		
+    	if (objectives.length == 0)
+    	{    		
+    		solver = ClaferCompiler.compile(model, scope);         
+    	}
+    	else
+    	{
+    		solver = ClaferCompiler.compile(model, scope, objectives);         
+    	}
+    	
 		if (solver != null)
 		{
 			nextInstance(solver, options.has("prettify"));
@@ -371,7 +378,7 @@ public class REPL {
             
             if (prettify)
             {
-            	System.out.println(instance);
+            	instance.print(System.out);
             }
             else
             {            
