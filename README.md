@@ -31,7 +31,7 @@ Running
 * [Java 7+](http://www.oracle.com/technetwork/java/javase/downloads/index.html).
 * [Clafer Compiler](https://github.com/gsdlab/clafer). Required for compiling Clafer files (`.cfr`) into the Clafer Choco Javascript format (`.js`), so that they can be run using the tool.
  
-### Running
+### Running Stand-alone and Arguments
 
 First, use *Clafer Compiler*:
 
