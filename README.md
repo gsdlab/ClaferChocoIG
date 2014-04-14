@@ -70,7 +70,7 @@ Option                          Description
 
 ### Configuring as a Backend
 
-The configuration is done in the `Server/Backends/backends.json` file.
+The configuration is done in the `<host-tool-path>/Server/Backends/backends.json` file, where `<host-tool-path>` is a path to the web-based tool (`ClaferIDE`, etc.) you want to configure to use `ClaferChocoIG` as a backend.
 
 * An example configuration for [ClaferIDE](https://github.com/gsdlab/ClaferIDE):
 
@@ -79,7 +79,6 @@ The configuration is done in the `Server/Backends/backends.json` file.
 
 {
     "backends": [
-.................
 .................
 
         {
@@ -106,7 +105,74 @@ The configuration is done in the `Server/Backends/backends.json` file.
             "presentation_specifics": {
                 "prompt_title": ""
             }            
-        }
+        },
+.................
+    ]   
+}
+
+```
+
+* An example configuration for [ClaferMooVisualizer](https://github.com/gsdlab/ClaferMooVisualizer):
+
+```json
+
+
+{
+    "backends": [
+...............
+        {
+            "id": "choco_moo", 
+            "label": "Choco-based (MOO with magnifier)",
+            "tooltip": "A new Choco-based solver, for multi-objective optimization",
+            "accepted_format": "choco",               
+            "tool": "java",
+            "tool_args": ["-jar", "$dirname$/../../../ChocoIG/claferchocoig-0.3.6-jar-with-dependencies.jar", "--file=$filepath$", "--moo"],
+            "tool_version_args": ["-jar", "$dirname$/../../../ChocoIG/claferchocoig-0.3.6-jar-with-dependencies.jar", "--version"],
+            "optimization_options": {
+                "set_int_scope" : {"label": "Max. integer:", "argument": "--maxint=$value$", "default_value": 127},
+                "set_default_scope" : {"label": "Default scopes:", "argument": "--scope=$value$", "default_value": 25}
+            }
+        },
+................
+    ]   
+}
+```
+
+* An example configuration for [ClaferConfigurator](https://github.com/gsdlab/ClaferConfigurator):
+
+```json
+
+{
+    "backends": [
+................
+
+        {
+            "id": "chocoIG", 
+            "label": "Choco-based (IG + MOO)",
+            "tooltip": "The new instance generator based on Choco3 solver library",
+            "accepted_format": "choco",             
+            "tool": "java",
+            "tool_args": ["-jar", "$dirname$/../../../ChocoIG/claferchocoig-0.3.6-jar-with-dependencies.jar", "--file=$filepath$", "--repl"],            
+            "tool_version_args": ["-jar", "$dirname$/../../../ChocoIG/claferchocoig-0.3.6-jar-with-dependencies.jar", "--version"],
+            "scope_options": {
+                "set_default_scope" : {"command": "globalScope $value$\n"}, 
+                "set_individual_scope": {"command": "scope $clafer$ $value$\n"}, 
+                "inc_all_scopes" : {"command": "incGlobalScope $value$\n"},
+                "inc_individual_scope": {"command": "incScope $clafer$ $value$\n"},
+                "set_int_scope" : {"command": "maxInt $value$\n", "default_value": 127}
+            },
+            "control_buttons": [
+                {"id": "next_instance", "command": "n\n", "label" : "Next", "tooltip": "Next Instance"}, 
+                {"id": "reload", "command": "r\n", "label" : "Reset", "tooltip": "Reset instance generation, applied scopes and other settings"}, 
+                {"id": "quit", "command": "q\n", "label" : "Quit", "tooltip": "Exit the IG safely"}
+            ],
+            "presentation_specifics": {
+                "prompt_title": "",
+                "no_more_instances": "No more instances found. Please consider increasing scopes"
+            }            
+        },
+................
+
     ]   
 }
 
