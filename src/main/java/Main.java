@@ -85,7 +85,12 @@ public class Main
 						
 			return;
 		}
-
+		
+		if (options.has("help"))
+		{
+			parser.printHelpOn(System.out);
+			return;
+		}
 		
 		if (!options.has( "file" ) ){
 			throw new Exception("Input file must be given using --file argument");		
