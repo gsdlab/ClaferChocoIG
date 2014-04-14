@@ -44,7 +44,7 @@ This will convert the Clafer file (`.cfr`) into the Clafer Choco Javascript file
 Next, run the instance generator:
 
 ```sh
-java -jar claferchocoig-0.3.5-jar-with-dependencies.jar --file=<file-name.js> <options>
+java -jar claferchocoig-0.3.6-jar-with-dependencies.jar --file=<file-name.js> <options>
 ```
 
 This will run the solver and produce instances in a textual form. The full list of `<options>` is listed below (as printed by `--help` command):
