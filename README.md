@@ -180,7 +180,7 @@ The configuration is done in the `<host-tool-path>/Server/Backends/backends.json
 
 **Notes**:
 
-`$dirname$` means the full path to the *Server/Backends* folder of the tool, `$filepath$` is the full path to the input JS file being processed.
+* `$dirname$` means the full path to the *Server/Backends* folder of the tool, `$filepath$` is the full path to the input JS file being processed.
 * If you make any changes to the `backends.json`, restart the web-tool completely to make the changes take effect.
 * If you done your configuration properly, the tool will restart successfully and the backend should be listed in the `Backends` dropdown list. If the tool does not start, the reason may be either a syntax error in the backends.json file, or the paths specified in it are not correct or lead to an inaccessible JAR file. Also, check the `Execute` permission on the JAR file.
 
