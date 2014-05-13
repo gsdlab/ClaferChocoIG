@@ -57,6 +57,7 @@ public class Main
                 accepts( "moo", "run the tool in multi-objective optimization mode" );
                 accepts( "version", "display the tool version" );
                 accepts( "maxint", "specify maximum integer value" ).withRequiredArg().ofType( Integer.class );
+                accepts( "minint", "specify minimum integer value" ).withRequiredArg().ofType( Integer.class );
                 accepts( "n", "specify maximum number of instances" ).withRequiredArg().ofType( Integer.class );
                 accepts( "scope", "override global scope value" ).withRequiredArg().ofType( Integer.class );
 

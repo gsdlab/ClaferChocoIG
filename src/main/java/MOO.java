@@ -93,7 +93,17 @@ public class MOO {
         	if (options.has("maxint"))
         	{
 				int scopeHigh = (int)options.valueOf("maxint");
-				int scopeLow = -(scopeHigh + 1);
+				int scopeLow;
+				
+	        	if (options.has("minint"))
+	        	{
+	        		scopeLow = (int)options.valueOf("minint");
+	        	}
+	        	else
+	        	{
+	        		scopeLow = -(scopeHigh + 1);
+	        	}
+	        	
 				scope = scope.toBuilder().intLow(scopeLow).intHigh(scopeHigh).toScope();
         	}
         }
