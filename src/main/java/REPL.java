@@ -27,7 +27,7 @@ public class REPL {
 	private static int instanceID = 0; // id of an instance previously been generated 
 	
 	public static void runREPL(File inputFile, OptionSet options) throws Exception {
-		
+		String commandHelp = "help";
 		String commandExit = "q";
 		String commandNext = "n";
 		String commandReload = "r";
@@ -54,15 +54,8 @@ public class REPL {
 		}
 		catch(Exception e)
 		{
-			if (e.getMessage().indexOf("ReferenceError: \"string\" is not defined.") >= 0)
-			{
-				System.out.println("The model contains string clafers, which are currently not supported in Choco-based IG.\nPlease press \"Quit\" or \"Stop\" to exit this instance generator and try another one.");
-			}
-			else	
-			{
-				System.out.println("Unhandled compilation error occured. Please report this problem.");
-				System.out.println(e.getMessage());
-			}
+			System.out.println("Unhandled compilation error occured. Please report this problem.");
+			System.out.println(e.getMessage());
 			
 			String s = "";
 			
@@ -118,6 +111,8 @@ public class REPL {
     	{
     		solver = ClaferCompiler.compile(model, scope, objectives);         
     	}
+		System.out.println("Clafer Choco Instance Generator and Multi-Objective Optimizer");
+		System.out.println("Type 'help' for the list of available REPL commands\n");  		
     	
 		if (solver != null)
 		{
@@ -126,20 +121,22 @@ public class REPL {
 		
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		String s = "";
-		
 		while(!(s = br.readLine()).equals(commandExit))
 		{
 			s = s.trim();
 			String commandParts[] = s.split(" ");
-			if (commandParts.length == 0)
+			if (s.equals("") || commandParts.length == 0)  // next instance
 			{
-				System.out.println("Empty Command");
+				if (solver == null)
+				{
+					solver = compileModel(model, scope, objectives);				
+				}
+				
+				nextInstance(solver, options.has("prettify"));
 				continue;
 			}
 			
 			String command = commandParts[0];
-			
-
 				
 			if (command.equals(commandNext)) // next instance
 			{
@@ -361,6 +358,22 @@ public class REPL {
 				
 				if (solver != null)						
 					System.out.println("Model is ready after the scope change");
+			}
+			else if (command.equals(commandHelp))
+			{
+				System.out.println("help                           print the REPL commands");
+				System.out.println("n                              generate the next instance");
+				System.out.println("<enter>                        generate the next instance");
+				System.out.println("r                              reload the model from the same <file-name.js> file");
+				System.out.println("unsatCore                      compute the set of contradicting constraints if any");
+				System.out.println("minUnsat                       compute the minimal UnSAT core and a near-miss example");
+				System.out.println("globalScope <value>            set the global scope to the <value> ");
+				System.out.println("scope <clafer-UID> <value>     set the scope of the given clafer to the <value>");
+				System.out.println("incGlobalScope <value>         increase the global scope by <value>");
+				System.out.println("incScope <clafer-UID> <value>  increase the scope of the given clafer by the <value>");
+				System.out.println("saveScopes                     save the currect scopes to a `.cfr-scope` file");
+				System.out.println("maxInt <value>                 set the largest allowed integer to <value>");
+				System.out.println("q                              exit the REPL sesssion");
 			}
 			else
 			{
