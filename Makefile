@@ -15,4 +15,4 @@ clean:
 install:  
 	mkdir -p $(to)
 	cp -f README.md $(to)/ClaferChocoIG-README.md
-	cp -f target/claferchocoig-0.3.5-jar-with-dependencies.jar $(to)
+	cp -f target/claferchocoig-0.3.6-jar-with-dependencies.jar $(to)
