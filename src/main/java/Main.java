@@ -48,8 +48,8 @@ public class Main
 		
         OptionParser parser = new OptionParser() {
             {
-                accepts( "file", "input file in Javascript format" ).withRequiredArg().ofType( File.class )
-                    .describedAs( "Javascript file" );
+                accepts( "file", "input file in .cfr or .js format" ).withRequiredArg().ofType( File.class )
+                    .describedAs( "Clafer model (.cfr) or Clafer Javascript file (.js)" );
                 
                 accepts( "testaadl", "test the AADL to Clafer model" );
                 accepts( "repl", "run the tool in REPL (interactive) mode" );
@@ -97,13 +97,39 @@ public class Main
 			throw new Exception("Input file must be given using --file argument");		
 		}
 		
-//			String fileName = 
 		File inputFile = (File) options.valueOf("file");
 		
 		if (!inputFile.exists())
 		{
 			throw new Exception("File does not exist: " + inputFile.getPath());
 		}
+		String fileName = inputFile.toString();
+		// If a .cfr file is given, compile it first and change the input file to the resulting .js file
+		if (fileName.endsWith(".cfr")) {
+			System.out.println("Compiling the Clafer model...");
+			// compile the file 
+			try {
+				Process compilerProcess = Runtime.getRuntime().exec("clafer -m choco " + fileName);
+				compilerProcess.waitFor();
+				if (compilerProcess.exitValue() != 0) {
+					System.out.println("Clafer compilation error: make sure your model is correct. Aborting...");
+					System.exit(1);
+				}
+			} catch (Exception e) {
+					System.out.println("Abnormal Clafer compiler termination. Aborting...");
+					System.exit(1);
+			}
+
+			// replace the extension to .js
+			int extPos = fileName.lastIndexOf(".");
+			if(extPos != -1) {
+			   fileName = fileName.substring(0, extPos) + ".js";
+			}
+
+			// change the inputFile to the resulting .js file
+			inputFile = new File(fileName);
+		}
+
 
 		PrintStream outStream = System.out;
 		
