@@ -26,6 +26,10 @@ import org.clafer.scope.Scope;
 public class REPL {
 	private static int instanceID = 0; // id of an instance previously been generated 
 	
+	private static String prompt(BufferedReader br) throws IOException {
+		System.out.print("\nclaferChocoIG> ");
+		return br.readLine();
+	}
 	public static void runREPL(File inputFile, OptionSet options) throws Exception {
 		String commandHelp = "help";
 		String commandExit = "q";
@@ -111,17 +115,14 @@ public class REPL {
     	{
     		solver = ClaferCompiler.compile(model, scope, objectives);         
     	}
-		System.out.println("Clafer Choco Instance Generator and Multi-Objective Optimizer");
-		System.out.println("Type 'help' for the list of available REPL commands\n");  		
-    	
+    	System.out.println("Type 'help' for the list of available REPL commands");
 		if (solver != null)
 		{
 			nextInstance(solver, options.has("prettify"));
 		}
-		
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		String s = "";
-		while(!(s = br.readLine()).equals(commandExit))
+		while(!(s = prompt(br)).equals(commandExit))
 		{
 			s = s.trim();
 			String commandParts[] = s.split(" ");
@@ -380,8 +381,6 @@ public class REPL {
 				System.out.println("Unhandled command: " + s);				
 			}
 		}
-		
-		System.out.println("Exit command");		
 	}
 
 	private static void nextInstance(ClaferSearch solver, boolean prettify) throws IOException 
@@ -395,7 +394,7 @@ public class REPL {
 		if (solver.find())
 		{
 			instanceID++;
-			System.out.println("=== Instance " + instanceID + " Begin ===\n");
+			System.out.println("\n=== Instance " + instanceID + " Begin ===\n");
 			
             InstanceModel instance = solver.instance();
             
@@ -414,7 +413,7 @@ public class REPL {
 		}
 		else
 		{
-			System.out.println("No more instances found. Please consider increasing scopes");						
+			System.out.println("No more instances found. Consider increasing scopes.");
 		}
 	}
 

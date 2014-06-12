@@ -45,11 +45,11 @@ import org.w3c.dom.NodeList;
 public class Main
 {
 	public static void main(String[] args) throws Exception {
-		
+		System.out.println("Clafer Choco Instance Generator and Multi-Objective Optimizer");
         OptionParser parser = new OptionParser() {
             {
                 accepts( "file", "input file in .cfr or .js format" ).withRequiredArg().ofType( File.class )
-                    .describedAs( "Clafer model (.cfr) or Clafer Javascript file (.js)" );
+                    .describedAs( "Clafer model file (.cfr) or Clafer Javascript file (.js)" );
                 
                 accepts( "testaadl", "test the AADL to Clafer model" );
                 accepts( "repl", "run the tool in REPL (interactive) mode" );
@@ -59,10 +59,10 @@ public class Main
                 accepts( "maxint", "specify maximum integer value" ).withRequiredArg().ofType( Integer.class );
                 accepts( "minint", "specify minimum integer value" ).withRequiredArg().ofType( Integer.class );
                 accepts( "n", "specify maximum number of instances" ).withRequiredArg().ofType( Integer.class );
-                accepts( "scope", "override global scope value" ).withRequiredArg().ofType( Integer.class );
+                accepts( "scope", "override the default global scope value" ).withRequiredArg().ofType( Integer.class );
 
                 accepts( "output", "output instances to file" ).withRequiredArg().ofType( File.class )
-                .describedAs( "Text file" );
+                .describedAs( "text file" );
 
                 accepts( "help", "show help").forHelp();                
             }
