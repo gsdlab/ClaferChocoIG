@@ -1,0 +1,70 @@
+abstract Person
+	name -> string
+		[ name != "" ]
+	age -> integer
+		[ this >= 0 ]
+	xor maritalStatus
+		neverMarried
+		married 
+			spouse -> Person
+				[ this != Person]
+			[ age >= 18 ]
+		divorced
+			[ age >= 18 ]
+
+Alice : Person
+	[ name = "Alice Brown" ]
+	[ age = 21 ]
+	[ spouse = Bob ]
+
+Bob : Person
+	[ name = "Bob Brown" ]
+	[ age = 22 ]
+	[ spouse = Alice ]
+
+Carol : Person
+	[ name = "Carol Brown" ]
+	[ age = 12 ]
+	[ neverMarried ]
+
+/*
+UnSAT core produced by chocosolver
+
+[[this . c0_name . ref = "Alice Brown"],
+ [this . c0_age . ref = 21],
+ [this . c0_maritalStatus . c0_married . c0_spouse . ref = c0_Bob],
+ [this . c0_name . ref = "Bob Brown"],
+ [this . c0_age . ref = 22],
+ [this . c0_maritalStatus . c0_married . c0_spouse . ref = c0_Alice],
+ [this . c0_name . ref = "Carol Brown"],
+ [this . c0_age . ref = 12]]
+
+
+> minUnsat()
+([[this . c0_name . ref = "Alice Brown"],
+ [this . c0_age . ref = 21],
+ [this . c0_maritalStatus . c0_married . c0_spouse . ref = c0_Bob],
+ [this . c0_name . ref = "Bob Brown"],
+ [this . c0_age . ref = 22],
+ [this . c0_maritalStatus . c0_married  . c0_spouse . ref = c0_Alice],
+  [this . c0_name . ref = "Carol Brown"],
+  [this . c0_age . ref = 12]], 
+
+c0_Alice#0
+    c0_name#0 =
+    c0_age#0 = 0
+    c0_maritalStatus#0
+        c0_neverMarried#0
+c0_Bob#0
+    c0_name#1 =
+    c0_age#1 = 0
+    c0_maritalStatus#1
+        c0_neverMarried#1
+c0_Carol#0
+    c0_name#2 =
+    c0_age#2 = 0
+    c0_maritalStatus#2
+        c0_neverMarried#2
+)
+
+*/
