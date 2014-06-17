@@ -1,18 +1,11 @@
 import java.io.File;
-import java.io.IOException;
 import java.io.PrintStream;
-import java.util.Enumeration;
-import java.util.Properties;
-
 import joptsimple.OptionSet;
 
-import org.clafer.ast.AstClafer;
 import org.clafer.ast.AstModel;
 import org.clafer.collection.Triple;
 import org.clafer.compiler.ClaferCompiler;
-import org.clafer.compiler.ClaferOptimizer;
 import org.clafer.compiler.ClaferSearch;
-import org.clafer.compiler.ClaferSolver;
 import org.clafer.instance.InstanceClafer;
 import org.clafer.instance.InstanceModel;
 import org.clafer.javascript.Javascript;

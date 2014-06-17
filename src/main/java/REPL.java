@@ -1,5 +1,4 @@
 import java.io.BufferedReader;
-import java.io.Console;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -13,9 +12,7 @@ import org.clafer.ast.AstClafer;
 import org.clafer.ast.AstModel;
 import org.clafer.collection.Triple;
 import org.clafer.compiler.ClaferCompiler;
-import org.clafer.compiler.ClaferOptimizer;
 import org.clafer.compiler.ClaferSearch;
-import org.clafer.compiler.ClaferSolver;
 import org.clafer.compiler.ClaferUnsat;
 import org.clafer.instance.InstanceClafer;
 import org.clafer.instance.InstanceModel;
@@ -174,7 +171,7 @@ public class REPL {
 				}
 				else
 				{
-					System.out.println("Reset");					
+					System.out.println("Reloaded");					
 				}
 				
 			}
