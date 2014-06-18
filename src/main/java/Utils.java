@@ -193,7 +193,7 @@ public static InstanceClafer getInstanceValueByName(InstanceClafer[] topClafers,
         	String name = clafer.getType().getSuperClafer().getName();
         	if (name.equals("#clafer#"))
         		name = "clafer";
-        	
+
         	out.append(" : ").append(name);
         }
         

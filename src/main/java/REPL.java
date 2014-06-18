@@ -161,17 +161,36 @@ public class REPL {
 			}			
 			else if (command.equals(commandReload)) // reloading
 			{
-				solver = compileModel(model, scope, objectives);
-				
-				if (solver == null)
+				try
 				{
-					System.out.println("Could not reload");					
+					modelTripple = Javascript.readModel(inputFile);
+				}
+				catch(Exception e)
+				{
+					System.out.println("Unhandled compilation error occured. Please report this problem.");
+					System.out.println(e.getMessage());
+					modelTripple = null;
+				}
+				
+				if (modelTripple != null)
+				{
+					model = modelTripple.getFst();        
+					scope = modelTripple.getSnd();
+					objectives = modelTripple.getThd();				
+					
+					solver = compileModel(model, scope, objectives);
+					if (solver == null)
+					{
+						System.out.println("Could not reload");					
+					}
+					else
+					{
+						System.out.println("Reloaded");					
+					}
 				}
 				else
-				{
-					System.out.println("Reloaded");					
-				}
-				
+					System.out.println("Could not reload");										
+								
 			}
 			else if (command.equals(commandScopeGlobal))
 			{				
@@ -425,7 +444,8 @@ public class REPL {
 		catch (Exception e)
 		{
 			solver = null;			
-			System.out.println(e.getMessage());
+			System.out.println("Message: " + e.getMessage());
+			e.printStackTrace();
 		}		
 		
 		return solver;
