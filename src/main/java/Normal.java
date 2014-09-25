@@ -55,7 +55,7 @@ public class Normal {
     	ClaferSearch solver;
         ClaferOption compilerOption = ClaferOption.Default;
         if (options.has("search")) {
-            compilerOption.setStrategy((ClaferSearchStrategy) options.valueOf("search"));
+            compilerOption = compilerOption.setStrategy((ClaferSearchStrategy) options.valueOf("search"));
         }
     	if (objectives.length == 0)
     	{    		

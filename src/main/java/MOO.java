@@ -112,7 +112,7 @@ public class MOO {
         
         ClaferOption compilerOption = ClaferOption.Default;
         if (options.has("search")) {
-            compilerOption.setStrategy((ClaferSearchStrategy) options.valueOf("search"));
+            compilerOption = compilerOption.setStrategy((ClaferSearchStrategy) options.valueOf("search"));
         }
         ClaferOptimizer solver = ClaferCompiler.compile(model, 
         		scope, 
