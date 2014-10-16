@@ -26,6 +26,11 @@ The binary for this project is called `claferchocoig.jar`.
 
 In case this binary does not work on your particular machine configuration, it can be built from source code, as described further.
 
+Integration with Sublime Text 2/3
+-------------------------------
+
+See [ClaferToolsST](https://github.com/gsdlab/ClaferToolsST)
+
 Usage
 -----
 
