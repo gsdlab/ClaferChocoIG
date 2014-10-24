@@ -19,8 +19,7 @@ Contributors
 Getting Binaries
 ----------------
 
-Binary distributions of the release 0.3.7 of Clafer Tools for Windows, Mac, and Linux, 
-can be downloaded from [Clafer Tools - Binary Distributions](http://http://gsd.uwaterloo.ca/clafer-tools-binary-distributions). 
+Binary distributions of the release 0.3.7 of Clafer Tools for Windows, Mac, and Linux, can be downloaded from [Clafer Tools - Binary Distributions](http://http://gsd.uwaterloo.ca/clafer-tools-binary-distributions). 
 
 The binary for this project is called `claferchocoig.jar`.
 
