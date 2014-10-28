@@ -10,6 +10,8 @@ import org.clafer.ast.AstModel;
 import org.clafer.collection.Triple;
 import org.clafer.compiler.ClaferCompiler;
 import org.clafer.compiler.ClaferOptimizer;
+import org.clafer.compiler.ClaferOption;
+import org.clafer.compiler.ClaferSearchStrategy;
 import org.clafer.instance.InstanceClafer;
 import org.clafer.instance.InstanceModel;
 import org.clafer.javascript.Javascript;
@@ -108,9 +110,13 @@ public class MOO {
         	}
         }
         
+        ClaferOption compilerOption = ClaferOption.Default;
+        if (options.has("search")) {
+            compilerOption = compilerOption.setStrategy((ClaferSearchStrategy) options.valueOf("search"));
+        }
         ClaferOptimizer solver = ClaferCompiler.compile(model, 
         		scope, 
-        	    goals);         
+        	    goals, compilerOption);
         
         System.out.println("Generating optimal instances...");        
         

@@ -12,7 +12,9 @@ import org.clafer.ast.AstClafer;
 import org.clafer.ast.AstModel;
 import org.clafer.collection.Triple;
 import org.clafer.compiler.ClaferCompiler;
+import org.clafer.compiler.ClaferOption;
 import org.clafer.compiler.ClaferSearch;
+import org.clafer.compiler.ClaferSearchStrategy;
 import org.clafer.compiler.ClaferUnsat;
 import org.clafer.instance.InstanceClafer;
 import org.clafer.instance.InstanceModel;
@@ -104,13 +106,17 @@ public class REPL {
 		
 		ClaferSearch solver = null;
 		
+        ClaferOption compilerOption = ClaferOption.Default;
+        if (options.has("search")) {
+            compilerOption = compilerOption.setStrategy((ClaferSearchStrategy) options.valueOf("search"));
+        }
     	if (objectives.length == 0)
     	{    		
-    		solver = ClaferCompiler.compile(model, scope);         
+            solver = ClaferCompiler.compile(model, scope, compilerOption);
     	}
     	else
     	{
-    		solver = ClaferCompiler.compile(model, scope, objectives);         
+            solver = ClaferCompiler.compile(model, scope, objectives, compilerOption);
     	}
     	System.out.println("Type 'help' for the list of available REPL commands");
 		if (solver != null)
