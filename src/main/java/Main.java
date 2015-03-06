@@ -4,6 +4,7 @@ import java.io.PrintStream;
 import java.util.Properties;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
+import org.clafer.compiler.ClaferSearchStrategy;
 
 public class Main
 {
@@ -23,7 +24,7 @@ public class Main
                 accepts( "minint", "specify minimum integer value" ).withRequiredArg().ofType( Integer.class );
                 accepts( "n", "specify maximum number of instances" ).withRequiredArg().ofType( Integer.class );
                 accepts( "scope", "override the default global scope value" ).withRequiredArg().ofType( Integer.class );
-
+                accepts( "search", "PreferSmallerInstances/PreferLargerInstances/Random" ).withRequiredArg().ofType( ClaferSearchStrategy.class );
                 accepts( "output", "output instances to file" ).withRequiredArg().ofType( File.class )
                 .describedAs( "text file" );
 

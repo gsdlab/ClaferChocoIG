@@ -5,7 +5,9 @@ import joptsimple.OptionSet;
 import org.clafer.ast.AstModel;
 import org.clafer.collection.Triple;
 import org.clafer.compiler.ClaferCompiler;
+import org.clafer.compiler.ClaferOption;
 import org.clafer.compiler.ClaferSearch;
+import org.clafer.compiler.ClaferSearchStrategy;
 import org.clafer.instance.InstanceClafer;
 import org.clafer.instance.InstanceModel;
 import org.clafer.javascript.Javascript;
@@ -51,13 +53,17 @@ public class Normal {
     	}
 
     	ClaferSearch solver;
+        ClaferOption compilerOption = ClaferOption.Default;
+        if (options.has("search")) {
+            compilerOption = compilerOption.setStrategy((ClaferSearchStrategy) options.valueOf("search"));
+        }
     	if (objectives.length == 0)
     	{    		
-    		solver = ClaferCompiler.compile(model, scope);         
+            solver = ClaferCompiler.compile(model, scope, compilerOption);
     	}
     	else
     	{
-    		solver = ClaferCompiler.compile(model, scope, objectives);         
+            solver = ClaferCompiler.compile(model, scope, objectives, compilerOption);
     	}
     	
         System.out.println("Generating instances...");        
