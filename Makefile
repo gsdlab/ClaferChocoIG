@@ -8,16 +8,16 @@ javadoc:
 jacoco:
 	mvn org.jacoco:jacoco-maven-plugin:prepare-agent test org.jacoco:jacoco-maven-plugin:report
 	@echo "Developer note: firefox target/site/jacoco/index.html"
-	
+
 clean:
 	mvn clean
 
-install:  
+install:
 	mkdir -p $(to)
 	cp -f README.md $(to)/ClaferChocoIG-README.md
-	cp -f target/claferchocoig-0.3.6.1-jar-with-dependencies.jar $(to)
+	cp -f target/claferchocoig-0.3.9-jar-with-dependencies.jar $(to)/claferchocoig.jar
 
-snapshotInstall:  
+snapshotInstall:
 	mkdir -p $(to)
 	cp -f README.md $(to)/ClaferChocoIG-README.md
-	mv -f target/claferchocoig-0.3.6.1-SNAPSHOT-jar-with-dependencies.jar $(to)/claferchocoig-0.3.6.1-jar-with-dependencies.jar
+	mv -f target/claferchocoig-0.3.9-SNAPSHOT-jar-with-dependencies.jar $(to)/claferchocoig.jar

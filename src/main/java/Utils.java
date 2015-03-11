@@ -198,9 +198,9 @@ public static InstanceClafer getInstanceValueByName(InstanceClafer[] topClafers,
         }
         
         if(clafer.hasRef()) {
-            out.append("  =  ").append(clafer.getRef().getType().isPrimitive()
-                    ? clafer.getRef().getValue().toString()
-                    : clafer.getRef().getType().getName() + "$" + clafer.getRef().getValue());
+            out.append("  =  ").append(clafer.getType().isPrimitive()
+                    ? clafer.getRef().toString()
+                    : clafer.getType().getName() + "$" + clafer.getRef());
         }
 
         out.append(" \n");
