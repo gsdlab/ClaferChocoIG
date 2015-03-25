@@ -77,6 +77,7 @@ public class Normal {
     		n = -1;
         
     	int index = 0; // instance id
+	boolean prettify = options.has("prettify");
         while (solver.find()) 
     	{
         	if (n >= 0 && index == n)
@@ -84,9 +85,16 @@ public class Normal {
         	
         	outStream.println("=== Instance " + (++index) + " Begin ===\n");                    
             InstanceModel instance = solver.instance();
-            for (InstanceClafer c : instance.getTopClafers())
+            if (prettify)
             {
-            	Utils.printClafer(c, outStream);
+                instance.print(outStream);
+            }
+            else
+            {
+                for (InstanceClafer c : instance.getTopClafers())
+                {
+                      Utils.printClafer(c, outStream);
+                }
             }
             outStream.println("--- Instance " + (index) + " End ---\n");                    
     	}
