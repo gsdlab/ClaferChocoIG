@@ -12,203 +12,199 @@ import org.clafer.instance.InstanceClafer;
 
 
 public class Utils {
-	
-	
-	
-	public static List<AstClafer> getAllModelClafers(AstModel model) {
-		// TODO Auto-generated method stub
-		
-		List<AstClafer> result = new ArrayList<AstClafer>();
-		
-		List<AstAbstractClafer> abstractChildren = model.getAbstracts();
-		result.addAll(abstractChildren);
-		
-		for (AstAbstractClafer clafer : abstractChildren)
-		{
-			result.addAll(getAllConcreteClafers(clafer));
-		}		
-		
-		List<AstConcreteClafer> concreteChildren = model.getChildren();
-		result.addAll(concreteChildren);
-		
-		for (AstConcreteClafer clafer : concreteChildren)
-		{
-			result.addAll(getAllConcreteClafers(clafer));
-		}		
-		
-		return result;
-	}	
-	
-	public static List<AstConcreteClafer> getAllConcreteClafers(AstClafer root) {
-		// TODO Auto-generated method stub
 
-		List<AstConcreteClafer> result = new ArrayList<AstConcreteClafer>();
-		List<AstConcreteClafer> children = root.getChildren();
-		
-		result.addAll(children);
-		
-		for (AstConcreteClafer clafer : children)
-		{
-			if (clafer.hasChildren())
-			{
-				result.addAll(getAllConcreteClafers(clafer));
-			}
-		}
-		
-		return result;
-	}
 
-	public static void produceScopeFile(
-			List<ClaferNameScopePair> claferScopePairs, String scopesFile) throws FileNotFoundException {
+
+    public static List<AstClafer> getAllModelClafers(AstModel model) {
+
+        List<AstClafer> result = new ArrayList<AstClafer>();
+
+        List<AstAbstractClafer> abstractChildren = model.getAbstracts();
+        result.addAll(abstractChildren);
+
+        for (AstAbstractClafer clafer : abstractChildren)
+        {
+            result.addAll(getAllConcreteClafers(clafer));
+        }
+
+        List<AstConcreteClafer> concreteChildren = model.getChildren();
+        result.addAll(concreteChildren);
+
+        for (AstConcreteClafer clafer : concreteChildren)
+        {
+            result.addAll(getAllConcreteClafers(clafer));
+        }
+
+        return result;
+    }
+
+    public static List<AstConcreteClafer> getAllConcreteClafers(AstClafer root) {
+
+        List<AstConcreteClafer> result = new ArrayList<AstConcreteClafer>();
+        List<AstConcreteClafer> children = root.getChildren();
+
+        result.addAll(children);
+
+        for (AstConcreteClafer clafer : children)
+        {
+            if (clafer.hasChildren())
+            {
+                result.addAll(getAllConcreteClafers(clafer));
+            }
+        }
+
+        return result;
+    }
+
+    public static void produceScopeFile(
+            List<ClaferNameScopePair> claferScopePairs, String scopesFile) throws FileNotFoundException {
 // could be done with JSON serializer, but this way I do not refer to any libraries
-		
-		PrintWriter writer = new PrintWriter(scopesFile);
-		writer.println("[");
 
-		for (int i = 0; i < claferScopePairs.size(); i++)
-		{
-			ClaferNameScopePair pair = claferScopePairs.get(i);
+        PrintWriter writer = new PrintWriter(scopesFile);
+        writer.println("[");
 
-			if (pair.name.equals("#clafer#"))
-				pair.name = "";
-			
-			writer.print("{\"lpqName\": \"" + pair.name + "\", \"scope\": " + pair.scope + "}");			
+        for (int i = 0; i < claferScopePairs.size(); i++)
+        {
+            ClaferNameScopePair pair = claferScopePairs.get(i);
 
-			if (i != claferScopePairs.size() - 1)
-			{
-				writer.println(",");
-			}
-			
-		}
-		
-		writer.println("]");
-		writer.close();
-		
-	}
+            if (pair.name.equals("#clafer#"))
+                pair.name = "";
+
+            writer.print("{\"lpqName\": \"" + pair.name + "\", \"scope\": " + pair.scope + "}");
+
+            if (i != claferScopePairs.size() - 1)
+            {
+                writer.println(",");
+            }
+
+        }
+
+        writer.println("]");
+        writer.close();
+
+    }
 
 public static InstanceClafer getInstanceValueByName(InstanceClafer[] topClafers, String name) {
-		// TODO Auto-generated method stub
 
-		for (int i = 0; i < topClafers.length; i++)
-		{
-			if (topClafers[i].getType().getName().equals(name))
-			{
-				return topClafers[i];
-			}			
-		}
+        for (int i = 0; i < topClafers.length; i++)
+        {
+            if (topClafers[i].getType().getName().equals(name))
+            {
+                return topClafers[i];
+            }
+        }
 
-		for (int i = 0; i < topClafers.length; i++)
-		{
-			if (topClafers[i].hasChildren())
-			{
-				InstanceClafer result = getInstanceValueByName(topClafers[i].getChildren(), name);
-				if (result != null)
-					return result;
-			}
-		}
-		
-		return null;
-	}	
+        for (int i = 0; i < topClafers.length; i++)
+        {
+            if (topClafers[i].hasChildren())
+            {
+                InstanceClafer result = getInstanceValueByName(topClafers[i].getChildren(), name);
+                if (result != null)
+                    return result;
+            }
+        }
 
-	public static AstConcreteClafer getConcreteClaferChildByName(AstClafer root, String name) {
-		// TODO Auto-generated method stub
+        return null;
+    }
 
-		List<AstConcreteClafer> children = root.getChildren();
-		
-		for (AstConcreteClafer clafer : children)
-		{
-			if (clafer.getName().equals(name))
-			{
-				return clafer;
-			}
-		}
+    public static AstConcreteClafer getConcreteClaferChildByName(AstClafer root, String name) {
 
-		for (AstConcreteClafer clafer : children)
-		{
-			if (clafer.hasChildren())
-			{
-				AstConcreteClafer result = getConcreteClaferChildByName(clafer, name);
-				if (result != null)
-					return result;
-			}
-		}
-		
-		return null;
-	}	    
-	
-	public static AstClafer getModelChildByName(AstModel model, String name) {
-		// TODO Auto-generated method stub
-		
-		List<AstAbstractClafer> abstractChildren = model.getAbstracts();
-		
-		for (AstAbstractClafer clafer : abstractChildren)
-		{
-			if (clafer.getName().equals(name))
-			{
-				return clafer;
-			}
-		}
+        List<AstConcreteClafer> children = root.getChildren();
 
-		for (AstAbstractClafer clafer : abstractChildren)
-		{
-			AstClafer foundchild = getConcreteClaferChildByName(clafer, name);
-			if (foundchild != null)
-			{
-				return foundchild;
-			}
-		}		
+        for (AstConcreteClafer clafer : children)
+        {
+            if (clafer.getName().equals(name))
+            {
+                return clafer;
+            }
+        }
 
-		
-		List<AstConcreteClafer> concreteChildren = model.getChildren();
-		
-		for (AstConcreteClafer clafer : concreteChildren)
-		{
-			if (clafer.getName().equals(name))
-			{
-				return clafer;
-			}
-		}
+        for (AstConcreteClafer clafer : children)
+        {
+            if (clafer.hasChildren())
+            {
+                AstConcreteClafer result = getConcreteClaferChildByName(clafer, name);
+                if (result != null)
+                    return result;
+            }
+        }
 
-		for (AstConcreteClafer clafer : concreteChildren)
-		{
-			AstClafer foundchild = getConcreteClaferChildByName(clafer, name);
-			if (foundchild != null)
-			{
-				return foundchild;
-			}
-		}		
-		
-		return null;
-	}	
-	
+        return null;
+    }
+
+    public static AstClafer getModelChildByName(AstModel model, String name) {
+
+        List<AstAbstractClafer> abstractChildren = model.getAbstracts();
+
+        for (AstAbstractClafer clafer : abstractChildren)
+        {
+            if (clafer.getName().equals(name))
+            {
+                return clafer;
+            }
+        }
+
+        for (AstAbstractClafer clafer : abstractChildren)
+        {
+            AstClafer foundchild = getConcreteClaferChildByName(clafer, name);
+            if (foundchild != null)
+            {
+                return foundchild;
+            }
+        }
+
+
+        List<AstConcreteClafer> concreteChildren = model.getChildren();
+
+        for (AstConcreteClafer clafer : concreteChildren)
+        {
+            if (clafer.getName().equals(name))
+            {
+                return clafer;
+            }
+        }
+
+        for (AstConcreteClafer clafer : concreteChildren)
+        {
+            AstClafer foundchild = getConcreteClaferChildByName(clafer, name);
+            if (foundchild != null)
+            {
+                return foundchild;
+            }
+        }
+
+        return null;
+    }
+
     public static void printClafer(InstanceClafer clafer, Appendable out) throws IOException {
-    	printClafer(clafer, "", out);
+        printClafer(clafer, "", out);
     }
 
     private static void printClafer(InstanceClafer clafer, String indent, Appendable out) throws IOException {
-        out.append(indent).append(clafer.getType().toString()).append("$").append(Integer.toString(clafer.getId()));
-        
-        if (clafer.getType().getSuperClafer() != null)
-        {
-        	String name = clafer.getType().getSuperClafer().getName();
-        	if (name.equals("#clafer#"))
-        		name = "clafer";
+        out.append(indent).append(clafer.getType().getName()).append('$').append(Integer.toString(clafer.getId()));
 
-        	out.append(" : ").append(name);
+        if (clafer.getType().getSuperClafer() != null) {
+            String name = clafer.getType().getSuperClafer().getName();
+            // do not print the default super type "clafer"
+            if (! name.equals("#clafer#"))
+                out.append(" : ").append(name);
         }
-        
+
         if(clafer.hasRef()) {
-            out.append("  =  ").append(clafer.getType().isPrimitive()
-                    ? clafer.getRef().toString()
-                    : clafer.getType().getName() + "$" + clafer.getRef());
+            out.append(" -> " + clafer.getType().getRef().getTargetType().getName() + " = ");
+            if (clafer.getRef() instanceof InstanceClafer) {
+                InstanceClafer refClafer = (InstanceClafer) clafer.getRef();
+                out.append(refClafer.getType().getName()).append('$').append(Integer.toString(refClafer.getId()));
+            } else
+                out.append(clafer.getRef().toString());
         }
 
         out.append(" \n");
         for (InstanceClafer child : clafer.getChildren()) {
-        	printClafer(child, indent + "\t", out);
+            printClafer(child, indent + "    ", out);
         }
-    }	
-}	
+    }
+}
 
 class ClaferNameScopePair implements Comparable<ClaferNameScopePair> {
     int scope;
