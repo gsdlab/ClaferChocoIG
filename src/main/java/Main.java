@@ -8,7 +8,7 @@ import org.clafer.compiler.ClaferSearchStrategy;
 
 public class Main
 {
-	public static void main(String[] args) throws Exception {
+    public static void main(String[] args) throws Exception {
         OptionParser parser = new OptionParser() {
             {
                 accepts( "file", "input file in .cfr or .js format" ).withRequiredArg().ofType( File.class )
@@ -33,93 +33,93 @@ public class Main
 
         OptionSet options = parser.parse(args);
 
-		if (options.has("version"))
-		{
-			Properties configFile = new Properties();
-			try {
-				configFile.load(Main.class.getClassLoader().getResourceAsStream("version.properties"));
-				String name = configFile.getProperty("name");
-				String releaseDate = configFile.getProperty("releasedate");
-				String version = configFile.getProperty("version");
-				System.out.println(name + " v" + version + "." + releaseDate);
-			} catch (IOException e) {
+        if (options.has("version"))
+        {
+            Properties configFile = new Properties();
+            try {
+                configFile.load(Main.class.getClassLoader().getResourceAsStream("version.properties"));
+                String name = configFile.getProperty("name");
+                String releaseDate = configFile.getProperty("releasedate");
+                String version = configFile.getProperty("version");
+                System.out.println(name + " v" + version + "." + releaseDate);
+            } catch (IOException e) {
 
-				e.printStackTrace();
-			}
+                e.printStackTrace();
+            }
 
-			return;
-		}
+            return;
+        }
 
-		if (options.has("help"))
-		{
-			parser.printHelpOn(System.out);
-			return;
-		}
+        if (options.has("help"))
+        {
+            parser.printHelpOn(System.out);
+            return;
+        }
 
-		if (!options.has( "file" ) ){
-			throw new Exception("Input file must be given using --file argument");
-		}
+        if (!options.has( "file" ) ){
+            throw new Exception("Input file must be given using --file argument");
+        }
 
-		File inputFile = (File) options.valueOf("file");
+        File inputFile = (File) options.valueOf("file");
 
-		if (!inputFile.exists())
-		{
-			throw new Exception("File does not exist: " + inputFile.getPath());
-		}
-		String fileName = inputFile.toString();
-		// If a .cfr file is given, compile it first and change the input file to the resulting .js file
-		if (fileName.endsWith(".cfr")) {
-			System.out.println("Compiling the Clafer model...");
-			// compile the file
-			try {
-				Process compilerProcess = Runtime.getRuntime().exec("clafer -m choco " + fileName);
-				compilerProcess.waitFor();
-				if (compilerProcess.exitValue() != 0) {
-					System.out.println("Clafer compilation error: make sure your model is correct. Aborting...");
-					System.exit(1);
-				}
-			} catch (Exception e) {
-					System.out.println("Abnormal Clafer compiler termination. Aborting...");
-					System.exit(1);
-			}
+        if (!inputFile.exists())
+        {
+            throw new Exception("File does not exist: " + inputFile.getPath());
+        }
+        String fileName = inputFile.toString();
+        // If a .cfr file is given, compile it first and change the input file to the resulting .js file
+        if (fileName.endsWith(".cfr")) {
+            System.out.println("Compiling the Clafer model...");
+            // compile the file
+            try {
+                Process compilerProcess = Runtime.getRuntime().exec("clafer -m choco " + fileName);
+                compilerProcess.waitFor();
+                if (compilerProcess.exitValue() != 0) {
+                    System.out.println("Clafer compilation error: make sure your model is correct. Aborting...");
+                    System.exit(1);
+                }
+            } catch (Exception e) {
+                    System.out.println("Abnormal Clafer compiler termination. Aborting...");
+                    System.exit(1);
+            }
 
-			// replace the extension to .js
-			int extPos = fileName.lastIndexOf(".");
-			if(extPos != -1) {
-			   fileName = fileName.substring(0, extPos) + ".js";
-			}
+            // replace the extension to .js
+            int extPos = fileName.lastIndexOf(".");
+            if(extPos != -1) {
+               fileName = fileName.substring(0, extPos) + ".js";
+            }
 
-			// change the inputFile to the resulting .js file
-			inputFile = new File(fileName);
-		}
-
-
-		PrintStream outStream = System.out;
-
-		if (options.has("output"))
-		{
-			File outputFile = (File) options.valueOf("output");
-			outStream = new PrintStream(outputFile);
-		}
-
-		if (!inputFile.exists())
-		{
-			throw new Exception("File does not exist: " + inputFile.getPath());
-		}
-
-		if (options.has( "moo" ) )
-		{
-			MOO.runOptimization(inputFile, options);
-		}
-		else if (options.has( "repl" ) )
-		{
-			REPL.runREPL(inputFile, options);
-		}
-		else
-		{
-			Normal.runNormal(inputFile, options, outStream);
-		}
+            // change the inputFile to the resulting .js file
+            inputFile = new File(fileName);
+        }
 
 
-	}
+        PrintStream outStream = System.out;
+
+        if (options.has("output"))
+        {
+            File outputFile = (File) options.valueOf("output");
+            outStream = new PrintStream(outputFile);
+        }
+
+        if (!inputFile.exists())
+        {
+            throw new Exception("File does not exist: " + inputFile.getPath());
+        }
+
+        if (options.has( "moo" ) )
+        {
+            MOO.runOptimization(inputFile, options);
+        }
+        else if (options.has( "repl" ) )
+        {
+            REPL.runREPL(inputFile, options);
+        }
+        else
+        {
+            Normal.runNormal(inputFile, options, outStream);
+        }
+
+
+    }
 }
