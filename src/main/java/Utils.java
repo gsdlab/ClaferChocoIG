@@ -201,7 +201,7 @@ public static InstanceClafer getInstanceValueByName(InstanceClafer[] topClafers,
 
         out.append(" \n");
         for (InstanceClafer child : clafer.getChildren()) {
-            printClafer(child, indent + "    ", out);
+            printClafer(child, indent + "  ", out);
         }
     }
 }
