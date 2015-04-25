@@ -2,13 +2,13 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>claferchoco</groupId>
   <artifactId>claferchocoig</artifactId>
-  <version>0.3.9</version>
+  <version>0.3.10</version>
   <name>ChocoInstanceGenerator</name>
   <dependencies>
 	  <dependency>
 	    <groupId>org.clafer</groupId>
 	    <artifactId>chocosolver</artifactId>
-	    <version>0.3.9</version>
+	    <version>0.3.10</version>
 	  </dependency>
 	  <dependency>
 	    <groupId>net.sf.jopt-simple</groupId>
