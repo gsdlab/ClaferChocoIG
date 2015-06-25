@@ -8,6 +8,7 @@ import org.clafer.ast.AstAbstractClafer;
 import org.clafer.ast.AstClafer;
 import org.clafer.ast.AstConcreteClafer;
 import org.clafer.ast.AstModel;
+import org.clafer.ast.AstUtil;
 import org.clafer.instance.InstanceClafer;
 
 
@@ -191,7 +192,7 @@ public static InstanceClafer getInstanceValueByName(InstanceClafer[] topClafers,
         }
 
         if(clafer.hasRef()) {
-            out.append(" -> " + clafer.getType().getRef().getTargetType().getName() + " = ");
+            out.append(" -> " + AstUtil.getInheritedRef(clafer.getType()).getTargetType().getName() + " = ");
             if (clafer.getRef() instanceof InstanceClafer) {
                 InstanceClafer refClafer = (InstanceClafer) clafer.getRef();
                 out.append(refClafer.getType().getName()).append('$').append(Integer.toString(refClafer.getId()));
