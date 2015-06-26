@@ -1,5 +1,6 @@
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.util.Enumeration;
 import java.util.Properties;
 
@@ -21,7 +22,7 @@ import org.clafer.scope.Scope;
 
 public class MOO {
 
-    public static void runOptimization(File inputFile, OptionSet options) throws Exception
+    public static void runOptimization(File inputFile, OptionSet options, PrintStream outStream) throws Exception
     {
         //----------------------------------------
         // Running the model itself(instantiating)
@@ -121,18 +122,28 @@ public class MOO {
         System.out.println("Generating optimal instances...");
 
         int index = 0; // optimal instance id
+        boolean prettify = options.has("prettify");
         while (solver.find())
         {
-            System.out.println("=== Instance " + (++index) + " Begin ===\n");
+            outStream.println("=== Instance " + (++index) + " Begin ===\n");
             InstanceModel instance = solver.instance();
-            for (InstanceClafer c : instance.getTopClafers())
+
+            if (prettify)
             {
-                Utils.printClafer(c, System.out);
+                instance.print(outStream);
             }
-            System.out.println("--- Instance " + (index) + " End ---\n");
+            else
+            {
+                for (InstanceClafer c : instance.getTopClafers())
+                {
+                    Utils.printClafer(c, outStream);
+                }
+            }
+
+            outStream.println("--- Instance " + (index) + " End ---\n");
         }
 
-        System.out.println("All optimal instances within the scope generated\n");
+        System.out.println("All (" + index + ") optimal instances within the scope generated\n");
 
     }
 
