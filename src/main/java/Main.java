@@ -109,7 +109,7 @@ public class Main
 
         if (options.has( "moo" ) )
         {
-            MOO.runOptimization(inputFile, options);
+            MOO.runOptimization(inputFile, options, outStream);
         }
         else if (options.has( "repl" ) )
         {
