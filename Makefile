@@ -15,9 +15,9 @@ clean:
 install:
 	mkdir -p $(to)
 	cp -f README.md $(to)/ClaferChocoIG-README.md
-	cp -f target/claferchocoig-0.4.1-jar-with-dependencies.jar $(to)/claferchocoig.jar
+	cp -f target/claferchocoig-0.4.2-jar-with-dependencies.jar $(to)/claferchocoig.jar
 
 snapshotInstall:
 	mkdir -p $(to)
 	cp -f README.md $(to)/ClaferChocoIG-README.md
-	mv -f target/claferchocoig-0.4.1-SNAPSHOT-jar-with-dependencies.jar $(to)/claferchocoig.jar
+	mv -f target/claferchocoig-0.4.2-SNAPSHOT-jar-with-dependencies.jar $(to)/claferchocoig.jar
