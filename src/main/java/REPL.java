@@ -30,45 +30,63 @@ public class REPL {
         return br.readLine().trim();
     }
     public static void printHelp() {
-      System.out.println("'h'elp                            print the REPL commands");
-      System.out.println("'n'ext                            generate the next instance");
-      System.out.println("<enter>                           generate the next instance");
-      System.out.println("'r'eload                          reload the model from the same <file-name.js> file");
-      System.out.println("'u'nsatCore                       compute the set of contradicting constraints if any");
-      System.out.println("min'U'nsat                        compute the minimal UnSAT core and a near-miss example");
-      System.out.println("'S'etGlobalScope <value>          set the global scope to the <value> ");
-      System.out.println("'s'etScope <claferUID> <value>    set the scope of the given clafer to the <value>");
-      System.out.println("'I'ncGlobalScope <value?>         increase the global scope by <value> or 1 by default");
-      System.out.println("'i'ncScope <claferUID> <value?>   increase the scope of the given clafer by the <value>  or 1 by default");
-      System.out.println("sa'v'eScopes                      save the currect scopes to a `.cfr-scope` file");
-      System.out.println("'m'axInt <value>                  set the largest allowed integer to <value>");
-      System.out.println("'q'uit                            exit the REPL sesssion");
+      System.out.println("'h'elp                              print the REPL commands");
+      System.out.println("'n'ext                              generate the next instance");
+      System.out.println("<enter>                             generate the next instance");
+      System.out.println("'p'rettify                          toggle prettify on/off");
+      System.out.println("'r'eload                            reload the model from the same <file-name.js> file");
+      System.out.println("'u'nsatCore                         compute the set of contradicting constraints if any");
+      System.out.println("min'U'nsat                          compute the minimal UnSAT core and a near-miss example");
+      System.out.println("'S'etGlobalScope <value>            set the global scope to the <value> ");
+      System.out.println("'s'etScope <claferUID> <value>      set the scope of the given clafer to the <value>");
+      System.out.println("'I'ncGlobalScope <value?>           increase the global scope by <value> or 1 by default");
+      System.out.println("'i'ncScope <claferUID> <value?>     increase the scope of the given clafer by the <value>  or 1 by default");
+      System.out.println("sa'v'eScopes                        save the currect scopes to a `.cfr-scope` file");
+      System.out.println("'m'axInt <value>                    set the largest allowed integer to <value>");
+      System.out.println("sta't's                             display statistics about the current search");
+      System.out.println("'O'ptions                           display the current solver options");
+      System.out.println("strate'g'y <smaller|larger|random>  set search strategy to prefer smaller, prefer larger, or random");
+      System.out.println("'o'ptimizations                     toggle optimizations basic/full");
+      System.out.println("symmetry'B'reaking                  toggle symmetry breaking basic/full");
+      System.out.println("'q'uit                              exit the REPL sesssion");
     }
-    public static String commandHelpL           = "help";
-    public static String commandHelpS           = "h";
-    public static String commandNextL           = "next";
-    public static String commandNextS           = "n";
-    public static String commandNext            = "";
-    public static String commandReloadL         = "reload";
-    public static String commandReloadS         = "r";
-    public static String commandUnsatCoreL      = "unsatCore";
-    public static String commandUnsatCoreS      = "u";
-    public static String commandMinUnsatL       = "minUnsat";
-    public static String commandMinUnsatS       = "U";
-    public static String commandSetGlobalScopeL = "SetGlobalScope";
-    public static String commandSetGlobalScopeS = "S";
-    public static String commandSetScopeL       = "setScope";
-    public static String commandSetScopeS       = "s";
-    public static String commandIncGlobalScopeL = "IncGlobalScope";
-    public static String commandIncGlobalScopeS = "I";
-    public static String commandIncScopeL       = "incScope";
-    public static String commandIncScopeS       = "i";
-    public static String commandSaveScopesL     = "saveScopes";
-    public static String commandSaveScopesS     = "v";
-    public static String commandMaxIntL         = "maxInt";
-    public static String commandMaxIntS         = "m";
-    public static String commandQuitL           = "quit";
-    public static String commandQuitS           = "q";
+    public static String commandHelpL             = "help";
+    public static String commandHelpS             = "h";
+    public static String commandNextL             = "next";
+    public static String commandNextS             = "n";
+    public static String commandNext              = "";
+    public static String commandPrettifyL         = "prettify";
+    public static String commandPrettifyS         = "p";
+    public static String commandReloadL           = "reload";
+    public static String commandReloadS           = "r";
+    public static String commandUnsatCoreL        = "unsatCore";
+    public static String commandUnsatCoreS        = "u";
+    public static String commandMinUnsatL         = "minUnsat";
+    public static String commandMinUnsatS         = "U";
+    public static String commandSetGlobalScopeL   = "SetGlobalScope";
+    public static String commandSetGlobalScopeS   = "S";
+    public static String commandSetScopeL         = "setScope";
+    public static String commandSetScopeS         = "s";
+    public static String commandIncGlobalScopeL   = "IncGlobalScope";
+    public static String commandIncGlobalScopeS   = "I";
+    public static String commandIncScopeL         = "incScope";
+    public static String commandIncScopeS         = "i";
+    public static String commandSaveScopesL       = "saveScopes";
+    public static String commandSaveScopesS       = "v";
+    public static String commandMaxIntL           = "maxInt";
+    public static String commandMaxIntS           = "m";
+    public static String commandStatsL            = "stats";
+    public static String commandStatsS            = "t";
+    public static String commandOptionsL          = "Options";
+    public static String commandOptionsS          = "O";
+    public static String commandOptimizationsL    = "optimizations";
+    public static String commandOptimizationsS    = "o";
+    public static String commandSymmetryBreakingL = "symmetryBreaking";
+    public static String commandSymmetryBreakingS = "B";
+    public static String commandStrategyL         = "strategy";
+    public static String commandStrategyS         = "g";
+    public static String commandQuitL             = "quit";
+    public static String commandQuitS             = "q";
 
     public static void runREPL(File inputFile, JavascriptFile javascriptFile, OptionSet options) throws Exception {
         String scopesFile = inputFile.getAbsolutePath().substring(0, inputFile.getAbsolutePath().length() - 3) + ".cfr-scope";
@@ -111,17 +129,78 @@ public class REPL {
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String s = "";
+
+        /* ****************************************
+        |            Main REPL loop               |
+        **************************************** */
         while(true) {
             s = prompt(br);
 
             if (s.equals(commandQuitS) || s.equals(commandQuitL))
                break;
 
+            if (s.equals(commandPrettifyS) || s.equals(commandPrettifyL)) {
+                prettify = ! prettify;
+                System.out.println("Prettify: " + (prettify ? "On" : "Off"));
+                continue;
+            }
+
+            if (s.equals(commandStatsL)) {
+                System.out.println(solver.getInternalSolver().getMeasures().toString());
+                continue;
+            }
+
+            if (s.equals(commandOptionsS) || s.equals(commandOptionsL)) {
+                String strategy = (compilerOption.getStrategy() == ClaferSearchStrategy.PreferSmallerInstances)
+                                  ? "smaller"
+                                  : ((compilerOption.getStrategy() == ClaferSearchStrategy.PreferLargerInstances)
+                                      ? "larger" : "random"
+                                    );
+
+                System.out.println
+                ( "Options:"
+                + "\n strate'g'y:         "
+                + strategy
+                + "\n symmetry'B'reaking: "
+                + (compilerOption.isBasicSymmetryBreaking() ? "basic" : "")
+                + (compilerOption.isFullSymmetryBreaking() ? "full" : "")
+                + "\n 'o'ptimizations:    "
+                + (compilerOption.isBasicOptimizations() ? "basic" : "")
+                + (compilerOption.isFullOptimizations() ? "full" : "")
+                + "\n"
+                );
+                continue;
+            }
+
+            if (s.equals(commandOptimizationsS) || s.equals(commandOptimizationsL)) {
+                if (compilerOption.isBasicOptimizations()) {
+                  compilerOption = compilerOption.fullOptimizations();
+                  System.out.println("Optimizations: full");
+                }
+                else  {
+                  compilerOption = compilerOption.basicOptimizations();
+                  System.out.println("Optimizations: basic");
+                }
+                continue;
+            }
+
+            if (s.equals(commandSymmetryBreakingS) || s.equals(commandSymmetryBreakingL)) {
+                if (compilerOption.isBasicSymmetryBreaking()) {
+                  compilerOption = compilerOption.fullSymmetryBreaking();
+                  System.out.println("Symmetry breaking: full");
+                }
+                else  {
+                  compilerOption = compilerOption.basicSymmetryBreaking();
+                  System.out.println("Symmetry breaking: basic");
+                }
+                continue;
+            }
+
+
             String commandParts[] = s.split(" ");
             if (s.equals(commandNext) || commandParts.length == 0) { // next instance
                 if (solver == null)
                     solver = compileModel(model, scope, objectives, compilerOption);
-
                 nextInstance(solver, prettify);
                 continue;
             }
@@ -339,6 +418,33 @@ public class REPL {
                 if (solver != null)
                     System.out.println("Model is ready after the scope change");
             }
+            else if (command.equals(commandStrategyS) || command.equals(commandStrategyL)) {
+                if (commandParts.length != 2 ||
+                    (!"smaller".equals(commandParts[1]) &&
+                     !"larger".equals(commandParts[1]) &&
+                     !"random".equals(commandParts[1]))) {
+                    System.out.println("The format of the command is: '" + commandStrategyS + " <smaller|larger|random>'");
+                    System.out.println("Given: '" + s + "'");
+                    continue;
+                }
+                switch (commandParts[1]) {
+                  case "smaller":
+                    compilerOption = compilerOption.setStrategy(ClaferSearchStrategy.PreferSmallerInstances);
+                    System.out.println("Search strategy: smaller");
+                    break;
+                  case "larger":
+                    compilerOption = compilerOption.setStrategy(ClaferSearchStrategy.PreferLargerInstances);
+                    System.out.println("Search strategy: larger");
+                    break;
+                  case "random":
+                    System.out.println("Search strategy: random");
+                    compilerOption = compilerOption.setStrategy(ClaferSearchStrategy.Random);
+                    break;
+                }
+                continue;
+            }
+
+
             else if (command.equals(commandHelpS) || command.equals(commandHelpL)) {
                 printHelp();
             }
