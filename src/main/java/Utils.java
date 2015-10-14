@@ -13,9 +13,6 @@ import org.clafer.instance.InstanceClafer;
 
 
 public class Utils {
-
-
-
     public static List<AstClafer> getAllModelClafers(AstModel model) {
 
         List<AstClafer> result = new ArrayList<AstClafer>();

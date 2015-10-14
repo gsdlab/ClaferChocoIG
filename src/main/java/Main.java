@@ -5,6 +5,8 @@ import java.util.Properties;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import org.clafer.compiler.ClaferSearchStrategy;
+import org.clafer.javascript.Javascript;
+import org.clafer.javascript.JavascriptFile;
 
 public class Main
 {
@@ -14,10 +16,10 @@ public class Main
                 accepts( "file", "input file in .cfr or .js format" ).withRequiredArg().ofType( File.class )
                     .describedAs( "Clafer model file (.cfr) or Clafer Javascript file (.js)" );
 
-                accepts( "testaadl", "test the AADL to Clafer model" );
+                accepts( "v", "Validate the model by checking all assertions" );
                 accepts( "repl", "run the tool in REPL (interactive) mode" );
-                accepts( "prettify", "use simple and pretty output format (not formal)" );
                 accepts( "moo", "run the tool in multi-objective optimization mode" );
+                accepts( "prettify", "use simple and pretty output format (not formal)" );
                 accepts( "version", "display the tool version" );
                 accepts( "maxint", "specify maximum integer value" ).withRequiredArg().ofType( Integer.class );
                 accepts( "minint", "specify minimum integer value" ).withRequiredArg().ofType( Integer.class );
@@ -33,8 +35,7 @@ public class Main
 
         OptionSet options = parser.parse(args);
 
-        if (options.has("version"))
-        {
+        if (options.has("version")) {
             Properties configFile = new Properties();
             try {
                 configFile.load(Main.class.getClassLoader().getResourceAsStream("version.properties"));
@@ -43,36 +44,29 @@ public class Main
                 String version = configFile.getProperty("version");
                 System.out.println(name + " v" + version + "." + releaseDate);
             } catch (IOException e) {
-
                 e.printStackTrace();
             }
-
             return;
         }
-
-        if (options.has("help"))
-        {
+        if (options.has("help")) {
             parser.printHelpOn(System.out);
             return;
         }
-
-        if (!options.has( "file" ) ){
-            throw new Exception("Input file must be given using --file argument");
-        }
+        if (!options.has( "file" ))
+            throw new Exception("Use --file to provide the input file");
 
         File inputFile = (File) options.valueOf("file");
 
         if (!inputFile.exists())
-        {
-            throw new Exception("File does not exist: " + inputFile.getPath());
-        }
+            throw new Exception("The provided input file does not exist: " + inputFile.getPath());
+
         String fileName = inputFile.toString();
         // If a .cfr file is given, compile it first and change the input file to the resulting .js file
         if (fileName.endsWith(".cfr")) {
             System.out.println("Compiling the Clafer model...");
             // compile the file
             try {
-                Process compilerProcess = Runtime.getRuntime().exec("clafer -m choco " + fileName);
+                Process compilerProcess = Runtime.getRuntime().exec("clafer -k -m choco " + fileName);
                 compilerProcess.waitFor();
                 if (compilerProcess.exitValue() != 0) {
                     System.out.println("Clafer compilation error: make sure your model is correct. Aborting...");
@@ -107,19 +101,24 @@ public class Main
             throw new Exception("File does not exist: " + inputFile.getPath());
         }
 
-        if (options.has( "moo" ) )
-        {
-            MOO.runOptimization(inputFile, options, outStream);
+        // run the different modes
+        JavascriptFile javascriptFile = null;
+        try {
+            if (options.has( "v"))
+                System.out.println("=========== Parsing+Typechecking " + fileName + "  =============");
+            javascriptFile = Javascript.readModel(inputFile);
         }
-        else if (options.has( "repl" ) )
-        {
-            REPL.runREPL(inputFile, options);
+        catch(Exception e) {
+            System.out.println("Unhandled compilation error occured. Please report this problem.");
+            System.out.println(e.getMessage());
+            return;
         }
+
+        if (options.has("v"))
+            Validate.runValidate(inputFile, javascriptFile, options, outStream);
+        else if (options.has("repl"))
+            REPL.runREPL(inputFile, javascriptFile, options);
         else
-        {
-            Normal.runNormal(inputFile, options, outStream);
-        }
-
-
+            Normal.runNormal(javascriptFile, options, outStream);
     }
 }
