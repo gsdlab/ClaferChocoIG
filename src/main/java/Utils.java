@@ -4,18 +4,19 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import joptsimple.OptionSet;
+
 import org.clafer.ast.AstAbstractClafer;
 import org.clafer.ast.AstClafer;
 import org.clafer.ast.AstConcreteClafer;
 import org.clafer.ast.AstModel;
 import org.clafer.ast.AstUtil;
 import org.clafer.instance.InstanceClafer;
+import org.clafer.javascript.JavascriptFile;
+import org.clafer.scope.Scope;
 
 
 public class Utils {
-
-
-
     public static List<AstClafer> getAllModelClafers(AstModel model) {
 
         List<AstClafer> result = new ArrayList<AstClafer>();
@@ -204,6 +205,25 @@ public static InstanceClafer getInstanceValueByName(InstanceClafer[] topClafers,
         for (InstanceClafer child : clafer.getChildren()) {
             printClafer(child, indent + "  ", out);
         }
+    }
+    public static Scope resolveScopes(JavascriptFile javascriptFile, OptionSet options) {
+        Scope scope = javascriptFile.getScope();
+        if (options.has("scope"))
+            scope = scope.toBuilder().defaultScope((int) options.valueOf("scope")).toScope();
+
+        if (options.has("maxint")) {
+            int scopeHigh = (int)options.valueOf("maxint");
+            int scopeLow = options.has("minint") ? (int)options.valueOf("minint") : -(scopeHigh + 1);
+
+            scope = scope.toBuilder().intLow(scopeLow).intHigh(scopeHigh).toScope();
+        }
+        else {
+            /* setting the default int range */
+            int scopeHighDef = 127;
+            int scopeLowDef = -(scopeHighDef + 1);
+            scope = scope.toBuilder().intLow(scopeLowDef).intHigh(scopeHighDef).toScope();
+        }
+        return scope;
     }
 }
 

@@ -1,106 +1,72 @@
 import java.io.File;
+import java.io.IOException;
 import java.io.PrintStream;
+
 import joptsimple.OptionSet;
 
+import org.clafer.ast.AstClafer;
 import org.clafer.ast.AstModel;
-import org.clafer.collection.Triple;
 import org.clafer.compiler.ClaferCompiler;
 import org.clafer.compiler.ClaferOption;
 import org.clafer.compiler.ClaferSearch;
+import org.clafer.compiler.ClaferOptimizer;
 import org.clafer.compiler.ClaferSearchStrategy;
 import org.clafer.instance.InstanceClafer;
 import org.clafer.instance.InstanceModel;
 import org.clafer.javascript.Javascript;
+import org.clafer.javascript.JavascriptFile;
 import org.clafer.objective.Objective;
 import org.clafer.scope.Scope;
 
 
 public class Normal {
+    // Running the model itself(instantiating or optimizing)
+    public static void runNormal(JavascriptFile  javascriptFile, OptionSet options, PrintStream outStream) throws Exception {
 
-    public static void runNormal(File inputFile, OptionSet options, PrintStream outStream) throws Exception
-    {
-        //----------------------------------------
-        // Running the model itself(instantiating)
-        //----------------------------------------
-        System.out.println("Running Model...");
-
-        Triple<AstModel, Scope, Objective[]> modelTriple = Javascript.readModel(inputFile);
-
-        AstModel model = modelTriple.getFst();
-        Scope scope = modelTriple.getSnd();
-        Objective[] objectives = modelTriple.getThd();
-
-        if (options.has("scope"))
-        {
-            scope = scope.toBuilder().defaultScope((int) options.valueOf("scope")).toScope();
-        }
-
-        if (options.has("maxint"))
-        {
-            int scopeHigh = (int)options.valueOf("maxint");
-            int scopeLow;
-
-            if (options.has("minint"))
-            {
-                scopeLow = (int)options.valueOf("minint");
-            }
-            else
-            {
-                scopeLow = -(scopeHigh + 1);
-            }
-
-            scope = scope.toBuilder().intLow(scopeLow).intHigh(scopeHigh).toScope();
-        }
-
-        ClaferSearch solver;
-        ClaferOption compilerOption = ClaferOption.Default;
-        if (options.has("search")) {
-            compilerOption = compilerOption.setStrategy((ClaferSearchStrategy) options.valueOf("search"));
-        }
+        Objective[] objectives = javascriptFile.getObjectives();
         if (objectives.length == 0)
-        {
-            solver = ClaferCompiler.compile(model, scope, compilerOption);
-        }
+            System.out.println("Instantiating...");
         else
-        {
-            solver = ClaferCompiler.compile(model, scope, objectives, compilerOption);
-        }
+            System.out.println("Optimizing...");
 
-        System.out.println("Generating instances...");
+        // handle scopes
+        Scope scope = Utils.resolveScopes(javascriptFile, options);
+
+        // handle search strategy
+        ClaferOption compilerOption = ClaferOption.Default;
+        if (options.has("search"))
+            compilerOption = compilerOption.setStrategy((ClaferSearchStrategy) options.valueOf("search"));
+
+        // pick the right solver
+        ClaferSearch solver = objectives.length == 0
+            ? ClaferCompiler.compile(javascriptFile.getModel(), scope,             compilerOption)
+            : ClaferCompiler.compile(javascriptFile.getModel(), scope, objectives, compilerOption);
+
+        int index = 0; // instance id
+        boolean prettify = options.has("prettify");
 
         int n = 0;
         if (options.has("n"))
-        {
             n = (int)options.valueOf("n");
-        }
         else
             n = -1;
 
-        int index = 0; // instance id
-    boolean prettify = options.has("prettify");
-        while (solver.find())
-        {
+        while (solver.find()) {
             if (n >= 0 && index == n)
                 break;
 
             outStream.println("=== Instance " + (++index) + " Begin ===\n");
             InstanceModel instance = solver.instance();
             if (prettify)
-            {
                 instance.print(outStream);
-            }
             else
-            {
                 for (InstanceClafer c : instance.getTopClafers())
-                {
                       Utils.printClafer(c, outStream);
-                }
-            }
-            outStream.println("--- Instance " + (index) + " End ---\n");
+            outStream.println("\n--- Instance " + (index) + " End ---\n");
         }
-
-        System.out.println("Generated " + index +" instance(s)");
-
+        if (objectives.length == 0)
+          System.out.println("Generated " +                           index + " instance(s) within the scope\n");
+        else
+          System.out.println("Generated " + (n == -1 ? "all " : "") + index + " optimal instance(s) within the scope\n");
     }
-
 }
