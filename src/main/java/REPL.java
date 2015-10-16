@@ -91,23 +91,7 @@ public class REPL {
     public static void runREPL(File inputFile, JavascriptFile javascriptFile, OptionSet options) throws Exception {
         String scopesFile = inputFile.getAbsolutePath().substring(0, inputFile.getAbsolutePath().length() - 3) + ".cfr-scope";
 
-        Scope scope = javascriptFile.getScope();
-        if (options.has("scope"))
-            scope = scope.toBuilder().defaultScope((int) options.valueOf("scope")).toScope();
-
-        if (options.has("maxint")) {
-            int scopeHigh = (int)options.valueOf("maxint");
-            int scopeLow = options.has("minint") ? (int)options.valueOf("minint") : -(scopeHigh + 1);
-
-            scope = scope.toBuilder().intLow(scopeLow).intHigh(scopeHigh).toScope();
-        }
-        else {
-            /* setting the default int range */
-            int scopeHighDef = 127;
-            int scopeLowDef = -(scopeHighDef + 1);
-            scope = scope.toBuilder().intLow(scopeLowDef).intHigh(scopeHighDef).toScope();
-        }
-
+        Scope scope = Utils.resolveScopes(javascriptFile, options);
 
         ClaferOption compilerOption = ClaferOption.Default;
         if (options.has("search"))
@@ -238,7 +222,7 @@ public class REPL {
 
                 if (javascriptFile != null) {
                     model = javascriptFile.getModel();
-                    scope = javascriptFile.getScope();
+                    scope = Utils.resolveScopes(javascriptFile, options);
                     objectives = javascriptFile.getObjectives();
 
                     solver = compileModel(model, scope, objectives, compilerOption);

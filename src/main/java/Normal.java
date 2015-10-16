@@ -30,22 +30,7 @@ public class Normal {
             System.out.println("Optimizing...");
 
         // handle scopes
-        Scope scope = javascriptFile.getScope();
-        if (options.has("scope"))
-            scope = scope.toBuilder().defaultScope((int) options.valueOf("scope")).toScope();
-
-        if (options.has("maxint")) {
-            int scopeHigh = (int)options.valueOf("maxint");
-            int scopeLow = options.has("minint") ? (int)options.valueOf("minint") : -(scopeHigh + 1);
-
-            scope = scope.toBuilder().intLow(scopeLow).intHigh(scopeHigh).toScope();
-        }
-        else {
-            /* setting the default int range */
-            int scopeHighDef = 127;
-            int scopeLowDef = -(scopeHighDef + 1);
-            scope = scope.toBuilder().intLow(scopeLowDef).intHigh(scopeHighDef).toScope();
-        }
+        Scope scope = Utils.resolveScopes(javascriptFile, options);
 
         // handle search strategy
         ClaferOption compilerOption = ClaferOption.Default;
